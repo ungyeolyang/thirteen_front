@@ -1,44 +1,18 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoPerson, GoLock } from "react-icons/go";
 import Common from "../../utils/Common";
 import AuthAxiosApi from "../../api/AuthAxiosApi";
-
-const InputBox = styled.div`
-  display: flex;
-  align-items: center;
-  width: 70%;
-  height: 50px;
-  padding: 0 20px;
-  border: 1px solid black;
-  border-radius: 10px;
-
-  input {
-    text-align: center;
-    border: none;
-    font-size: 23px;
-    width: 90%;
-    padding: 4px;
-    font-weight: bold;
-    background-color: transparent;
-    outline: none;
-    padding-top: 10px;
-  }
-  input::placeholder {
-    font-size: 24px;
-  }
-  svg {
-    font-size: 24px;
-  }
-`;
+import KakaoLogin from "./KakaoLogin";
+import InputBox from "../../component/InputBox";
 
 const Line = styled.div`
   display: flex;
   color: gray;
   gap: 3px;
   padding-top: 10px;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
 `;
 
@@ -53,8 +27,41 @@ const Error = styled.div`
 
 const SignupBox = styled.div`
   cursor: pointer;
+  color: ${({ color }) => color && color};
   &:hover {
-    color: #bf00ff;
+    color: ${({ hover }) => (hover ? hover : `#bf00ff`)};
+  }
+`;
+const Button = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+  height: 50px;
+  color: white;
+  font-size: 23px;
+  font-weight: bold;
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: ${({ color }) => color && color};
+  &:hover {
+    background-color: ${({ hover }) => hover && hover};
+  }
+`;
+const HeaderBox = styled.div`
+  width: 70%;
+  font-weight: bold;
+  font-size: 26px;
+  margin: 100px 0;
+`;
+const Hdiv = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  span {
+    font-weight: bolder;
+    font-size: 32px;
   }
 `;
 
@@ -100,6 +107,12 @@ const Login = () => {
 
   return (
     <>
+      <HeaderBox>
+        <Hdiv>Welcome to</Hdiv>
+        <Hdiv>
+          <span>양웅열과 아이들</span>
+        </Hdiv>
+      </HeaderBox>
       <InputBox>
         <GoPerson style={{ color: `gray` }} />
         <input
@@ -120,13 +133,28 @@ const Login = () => {
         />
       </InputBox>
       <Error>{message}</Error>
-      <button onClick={onClickLogin}>
+      <Button onClick={onClickLogin} color="red" hover="RGB(193, 78, 78)">
         <div>로그인 </div>
-      </button>
+      </Button>
+      <Button>
+        <KakaoLogin />
+      </Button>
+      <Line>
+        <span>계정이 없으신가요?</span>
+        <SignupBox
+          onClick={() => {
+            navigate("signup", { state: { fromLogin: false } });
+          }}
+          color="RGB(113, 153, 255)"
+          hover="RGB(4, 74, 255)"
+        >
+          회원가입
+        </SignupBox>
+      </Line>
       <Line>
         <SignupBox
           onClick={() => {
-            navigate("find/id");
+            navigate("find", { state: { fromLogin: false, category: "id" } });
           }}
         >
           아이디 찾기
@@ -134,23 +162,12 @@ const Login = () => {
         <span>ㅣ</span>
         <SignupBox
           onClick={() => {
-            navigate("find/pw");
+            navigate("find", { state: { fromLogin: false, category: "pw" } });
           }}
         >
           비밀번호 찾기
         </SignupBox>
-        <span>ㅣ</span>
-        <SignupBox
-          onClick={() => {
-            navigate("signup");
-          }}
-        >
-          회원가입
-        </SignupBox>
       </Line>
-      {/* <KakaoBox>
-        <KakaoLogin radius={`10px`} />
-      </KakaoBox> */}
     </>
   );
 };

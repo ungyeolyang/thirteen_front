@@ -33,6 +33,9 @@ const Div = styled.div`
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  if (location.pathname.includes("/login")) {
+    return null;
+  }
 
   return (
     <>

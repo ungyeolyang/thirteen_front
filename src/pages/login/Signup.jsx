@@ -5,26 +5,16 @@ import AuthAxiosApi from "../../api/AuthAxiosApi";
 import { GoPerson, GoLock, GoMail, GoEye, GoEyeClosed } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
+import InputBox from "../../component/InputBox";
 
-const Container = styled.div`
-  position: relative;
-  width: 100%;
-  height: 70%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
 const SignBox = styled.div`
-  position: absolute;
-  bottom: 0;
   width: 100%;
   height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 10px;
+  gap: 30px;
 `;
 const ButtonContainer = styled.div`
   display: flex;
@@ -32,58 +22,6 @@ const ButtonContainer = styled.div`
   align-items: center;
   width: 100%;
   gap: 5px;
-`;
-const Button = styled.button`
-  width: 110px;
-  height: 40px;
-  font-size: 25px;
-  margin-top: 20px;
-  color: #000;
-  background: linear-gradient(to bottom, #f0f0f0, #dcdcdc);
-  border: 2px solid #fff;
-  border-top-color: #ccc;
-  border-left-color: #ccc;
-  border-right-color: #333;
-  border-bottom-color: #333;
-  padding-top: 8px;
-  box-shadow: 1px 1px 0 0 #000;
-  cursor: pointer;
-  outline: none;
-  &:active {
-    border-top-color: #333;
-    border-left-color: #333;
-    border-right-color: #ccc;
-    border-bottom-color: #ccc;
-    background: linear-gradient(to bottom, #dcdcdc, #f0f0f0);
-  }
-`;
-
-const InputBox = styled.div`
-  display: flex;
-  align-items: center;
-  width: 70%;
-  height: 50px;
-  padding: 0 20px;
-  border: 3px solid black;
-  border-radius: 10px;
-
-  input {
-    text-align: center;
-    border: none;
-    font-size: 23px;
-    width: 90%;
-    padding: 4px;
-    font-weight: bold;
-    background-color: transparent;
-    outline: none;
-    padding-top: 10px;
-  }
-  input::placeholder {
-    font-size: 24px;
-  }
-  svg {
-    font-size: 24px;
-  }
 `;
 
 const Error = styled.div`
@@ -298,115 +236,106 @@ const Signup = () => {
 
   return (
     <>
-      <Container>
-        <SignBox>
-          <InputBox>
-            <GoPerson style={{ color: `gray` }} />
-            <input
-              type="text"
-              placeholder="아이디"
-              onChange={(e) => setInputId(e.target.value)}
-              onBlur={onBlurId}
-              maxLength={20}
-              onKeyDown={(e) =>
-                Common.onKeyDownEnter(
-                  e,
-                  isClickCert ? onClickJoin : onClickCert
-                )
-              }
+      <SignBox>
+        <InputBox>
+          <GoPerson style={{ color: `gray` }} />
+          <input
+            type="text"
+            placeholder="아이디"
+            onChange={(e) => setInputId(e.target.value)}
+            onBlur={onBlurId}
+            maxLength={20}
+            onKeyDown={(e) =>
+              Common.onKeyDownEnter(e, isClickCert ? onClickJoin : onClickCert)
+            }
+          />
+        </InputBox>
+        <InputBox>
+          <GoLock style={{ color: `gray` }} />
+          <input
+            type={isEye ? `text` : `password`}
+            placeholder="비밀번호"
+            onChange={(e) => setInputPw(e.target.value)}
+            onBlur={onBlurPw}
+            maxLength={20}
+            onKeyDown={(e) =>
+              Common.onKeyDownEnter(e, isClickCert ? onClickJoin : onClickCert)
+            }
+          />
+          {isEye ? (
+            <GoEye
+              onClick={() => {
+                setIsEye(false);
+              }}
+              style={{ color: `gray`, cursor: "pointer" }}
             />
-          </InputBox>
-          <InputBox>
-            <GoLock style={{ color: `gray` }} />
-            <input
-              type={isEye ? `text` : `password`}
-              placeholder="비밀번호"
-              onChange={(e) => setInputPw(e.target.value)}
-              onBlur={onBlurPw}
-              maxLength={20}
-              onKeyDown={(e) =>
-                Common.onKeyDownEnter(
-                  e,
-                  isClickCert ? onClickJoin : onClickCert
-                )
-              }
+          ) : (
+            <GoEyeClosed
+              onClick={() => {
+                setIsEye(true);
+              }}
+              style={{ color: `gray`, cursor: "pointer" }}
             />
-            {isEye ? (
-              <GoEye
-                onClick={() => {
-                  setIsEye(false);
-                }}
-                style={{ color: `gray` }}
-              />
-            ) : (
-              <GoEyeClosed
-                onClick={() => {
-                  setIsEye(true);
-                }}
-                style={{ color: `gray` }}
-              />
-            )}
-          </InputBox>
-          <InputBox>
-            <GoPerson style={{ color: `gray` }} />
-            <input
-              type="text"
-              placeholder="닉네임"
-              onChange={(e) => setInputNick(e.target.value)}
-              onBlur={onBlurNick}
-              onKeyDown={(e) =>
-                Common.onKeyDownEnter(
-                  e,
-                  isClickCert ? onClickJoin : onClickCert
-                )
-              }
-            />
-          </InputBox>
-          <InputBox>
-            <GoMail style={{ color: `gray` }} />
-            <input
-              type="text"
-              placeholder="이메일"
-              onChange={(e) => onChangeEmail(e)}
-              onBlur={onBlureMail}
-              onKeyDown={(e) =>
-                Common.onKeyDownEnter(
-                  e,
-                  isClickCert ? onClickJoin : onClickCert
-                )
-              }
-              disabled={isClickCert}
-            />
-          </InputBox>
-          <Error>{idMessage}</Error>
-          <Error>{pwMessage}</Error>
-          <Error>{nickMessage}</Error>
-          <Error>{emailMessage}</Error>
-          {isClickCert && (
-            <>
-              <InputBox>
-                <GoLock style={{ color: `gray` }} />
-                <input
-                  type="text"
-                  placeholder="인증번호"
-                  onChange={(e) => setInputCert(e.target.value)}
-                  onBlur={onBlurCert}
-                  maxLength={20}
-                />
-              </InputBox>
-              <Error>{certMessage}</Error>
-            </>
           )}
-          <ButtonContainer>
-            <Button onClick={() => navigate("/login")}>취소</Button>
-            {isClickCert ? (
-              <Button onClick={onClickJoin}>가입하기</Button>
-            ) : (
-              <Button onClick={onClickCert}>인증하기</Button>
-            )}
-          </ButtonContainer>
-        </SignBox>
-      </Container>
+        </InputBox>
+        <InputBox>
+          <GoPerson style={{ color: `gray` }} />
+          <input
+            type="text"
+            placeholder="닉네임"
+            onChange={(e) => setInputNick(e.target.value)}
+            onBlur={onBlurNick}
+            onKeyDown={(e) =>
+              Common.onKeyDownEnter(e, isClickCert ? onClickJoin : onClickCert)
+            }
+          />
+        </InputBox>
+        <InputBox>
+          <GoMail style={{ color: `gray` }} />
+          <input
+            type="text"
+            placeholder="이메일"
+            onChange={(e) => onChangeEmail(e)}
+            onBlur={onBlureMail}
+            onKeyDown={(e) =>
+              Common.onKeyDownEnter(e, isClickCert ? onClickJoin : onClickCert)
+            }
+            disabled={isClickCert}
+          />
+          <button>인증</button>
+        </InputBox>
+        <Error>{idMessage}</Error>
+        <Error>{pwMessage}</Error>
+        <Error>{nickMessage}</Error>
+        <Error>{emailMessage}</Error>
+        {isClickCert && (
+          <>
+            <InputBox>
+              <GoLock style={{ color: `gray` }} />
+              <input
+                type="text"
+                placeholder="인증번호"
+                onChange={(e) => setInputCert(e.target.value)}
+                onBlur={onBlurCert}
+                maxLength={20}
+              />
+            </InputBox>
+            <Error>{certMessage}</Error>
+          </>
+        )}
+        <ButtonContainer>
+          <button
+            onClick={() => navigate("/login", { state: { fromLogin: true } })}
+          >
+            취소
+          </button>
+          {isClickCert ? (
+            <button onClick={onClickJoin}>가입하기</button>
+          ) : (
+            <button onClick={onClickCert}>인증하기</button>
+          )}
+        </ButtonContainer>
+      </SignBox>
     </>
   );
 };

@@ -8,6 +8,7 @@ import LoginPage from "./pages/login/LoginPage";
 import SignupPage from "./pages/login/SignupPage";
 import Main from "./pages/main/Main";
 import Suggestion from "./pages/suggestion/Suggestion";
+import FindPage from "./pages/login/FindPage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -26,8 +27,11 @@ function App() {
           <Routes>
             <Route path="/" element={<HeaderFooter />}>
               <Route index element={<Main />} />
-              <Route path="login" element={<Login />} />
-              <Route path="signup" element={<SignupPage />} />
+              <Route path="login" element={<LoginPage />}>
+                <Route index element={<Login />} />
+                <Route path="find" element={<FindPage />} />
+                <Route path="signup" element={<SignupPage />} />
+              </Route>
               <Route path="suggestion" element={<Suggestion />} />
             </Route>
           </Routes>
