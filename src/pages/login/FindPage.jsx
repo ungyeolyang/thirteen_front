@@ -8,15 +8,18 @@ import FindId from "./FindId";
 
 const Div = styled.div`
   display: flex;
+  justify-content: center;
+  width: 65%;
 `;
 const Span = styled.div`
+  text-align: center;
   cursor: pointer;
-  padding: 5px 15px;
+  padding: 20px 0;
   font-size: 24px;
   width: 100%;
   font-weight: bold;
-  color: ${({ active }) => (active ? `#bf00ff` : `gray`)};
-  border-bottom: 3px solid ${({ active }) => (active ? `#bf00ff` : "gray")};
+  color: ${({ active }) => (active ? `#c80000` : `gray`)};
+  border-bottom: 3px solid ${({ active }) => (active ? `#c80000` : "gray")};
 `;
 
 const FindBtn = styled.div`

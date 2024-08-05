@@ -1,38 +1,65 @@
+import styled from "styled-components";
+
+const TermBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: gray solid 1px;
+  height: 500px;
+  gap: 10px;
+  overflow: auto;
+`;
+const Number = styled.div`
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+`;
+
+const Div = styled.div`
+  display: flex;
+  justify-content: center;
+  text-align: center;
+`;
+const Cdiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  ol {
+    list-style-type: decimal; /* ol 요소의 기본 숫자 스타일을 복원 */
+    padding-left: 20px; /* 왼쪽 패딩을 추가하여 숫자와 내용이 겹치지 않게 */
+  }
+
+  li {
+    margin-bottom: 10px; /* 항목 간의 간격을 조정 */
+  }
+`;
+
 const Term = () => {
   return (
-    <>
-      <div className="term 1">
-        <p className="term_title">제1조 (목적)</p>
-        <ul className="ul_square">
+    <TermBox>
+      <Number>제1조 (목적)</Number>
+      <Div>
+        이 약관은, 일공이오(이하 "회사”)가 제공하는 서비스('https://'이하
+        “서비스”)를 이용하고자 하는 이용자(이하 "회원")간의 권리와 의무 및 기타
+        제반사항을 명확히 하는 것을 목적으로 합니다.
+      </Div>
+      <Number>제2조 (용어의 정의)</Number>
+      <Cdiv>
+        <div>본 약관에서 사용하는 용어의 정의는 다음과 같습니다.</div>
+        <ol>
           <li>
-            이 약관은, 일공이오(이하 "회사”)가 제공하는 서비스('http://'이하
-            “서비스”)를 이용하고자 하는 이용자(이하 "회원")간의 권리와 의무 및
-            기타 제반사항을 명확히 하는 것을 목적으로 합니다.
+            “서비스”란 이용자가 회사의 서비스를 이용할 수 있도록 "회사"가
+            제공하는 연말정산를 위한 웹/앱 플랫폼 서비스 일체를 의미합니다.
           </li>
-        </ul>
-      </div>
-      <div className="term 2">
-        <p className="term_title">제2조 (용어의 정의)</p>
-        <ul className="ul_square">
           <li>
-            본 약관에서 사용하는 용어의 정의는 다음과 같습니다.
-            <br />
-            <ol>
-              <li>
-                “서비스”란 이용자가 회사의 서비스를 이용할 수 있도록 "회사"가
-                제공하는 여행 루트 공유를 위한 웹/앱 플랫폼 서비스 일체를
-                의미합니다.
-              </li>
-              <li>
-                "회원"이란 "회사"의 서비스에 가입하여 고유번호를 부여 받은 후
-                이를 이용하는 사람을 의미합니다.
-              </li>
-            </ol>
+            "회원"이란 "회사"의 서비스에 가입하여 고유번호를 부여 받은 후 이를
+            이용하는 사람을 의미합니다.
           </li>
-        </ul>
-      </div>
-      <div className="term 3">
-        <p className="term_title">제3조 (약관의 효력)</p>
+        </ol>
+      </Cdiv>
+      <Number>제3조 (약관의 효력)</Number>
+      <Cdiv>
         <ol>
           <li>
             회사는 본 약관을 "회사" 서비스 화면에 게시하여, 서비스를 이용하고자
@@ -61,9 +88,9 @@ const Term = () => {
             아니한 경우 개정약관에 동의한 것으로 봅니다.
           </li>
         </ol>
-      </div>
-      <div className="term 4">
-        <p className="term_title">제4조 (이 약관의 성립)</p>
+      </Cdiv>
+      <Number>제4조 (이 약관의 성립)</Number>
+      <Cdiv>
         <ol>
           <li>
             이 약관은 "서비스"를 이용하고자하는 자가 이 약관에 동의하고 "회사"가
@@ -73,9 +100,9 @@ const Term = () => {
           </li>
           <li>이 "회사"의 "서비스" 이용은 14세 이상 부터 가능합니다.</li>
         </ol>
-      </div>
-      <div className="term 5">
-        <p className="term_title">제5조 (정보 제공 및 광고의 게재)</p>
+      </Cdiv>
+      <Number>제5조 (정보 제공 및 광고의 게재)</Number>
+      <Cdiv>
         <ol>
           <li>
             "회원"은 "서비스" 이용 시 서비스 화면 상 노출되는 광고 게재에 대해
@@ -88,16 +115,16 @@ const Term = () => {
             해결하여야 하며, 이와 관련하여 "회사"는 어떠한 책임도 지지 않습니다.
           </li>
         </ol>
-      </div>
-      <div className="term 6">
-        <p className="term_title">제6조 (비밀유지의무)</p>
+      </Cdiv>
+      <Number>제6조 (비밀유지의무)</Number>
+      <Cdiv>
         <ol>
           <li>
             이 약관과 관련하여 상대방으로부터 제공받은 모든 정보는 다음 각 호
             어느 하나에 해당하는 경우를 제외하고는 비밀로 하고, 이 약관상의 권리
             또는 의무를 이행하기 위한 목적 이외에 이를 사용하거나 제3자에게
             제공할 수 없습니다.
-            <ul className="ul_disc">
+            <ul>
               <li>당사자들이 공개하기로 합의한 사항</li>
               <li>공지된 정보</li>
               <li>
@@ -114,9 +141,9 @@ const Term = () => {
             종료된 경우에도 그 때로부터 2년간 유효합니다.
           </li>
         </ol>
-      </div>
-      <div className="term 7">
-        <p className="term_title">제7조 (회원 탈퇴 및 자격 상실 등)</p>
+      </Cdiv>
+      <Number>제7조 (회원 탈퇴 및 자격 상실 등)</Number>
+      <Cdiv>
         <ol>
           <li>
             "회원"은 "회사"에 언제든지 탈퇴를 요청할 수 있으며 "회사"는 즉시
@@ -124,9 +151,9 @@ const Term = () => {
             영구삭제 합니다.
           </li>
         </ol>
-      </div>
-      <div className="term 8">
-        <p className="term_title">제8조 (면책)</p>
+      </Cdiv>
+      <Number>제8조 (면책)</Number>
+      <Cdiv>
         <ol>
           <li>
             "회사"는 "회원"들 사이의 정보 공유를 위한 시스템만을 제공할 뿐, 해당
@@ -143,9 +170,9 @@ const Term = () => {
             "회사"는 고의 또는 중대한 과실이 없는 한 책임을 부담하지 않습니다.
           </li>
         </ol>
-      </div>
-      <div className="term 9">
-        <p className="term_title">제9조 (약관 개정)</p>
+      </Cdiv>
+      <Number>제9조 (약관 개정)</Number>
+      <Cdiv>
         <ol>
           <li>
             약관 변경시 "회사"는 "서비스"를 통해 공지하며, 공지일로부터 7일 후
@@ -156,9 +183,9 @@ const Term = () => {
             간주됩니다.
           </li>
         </ol>
-      </div>
-      <div className="term 10">
-        <p className="term_title">제10조 (분쟁의 해결)</p>
+      </Cdiv>
+      <Number>제10조 (분쟁의 해결)</Number>
+      <Cdiv>
         <ol>
           <li>
             이 약관으로 인하여 또는 이 약관과 관련하여 분쟁이 발생하는 경우
@@ -170,10 +197,9 @@ const Term = () => {
             제1심의 합의관할로 하는 소송에 의합니다.
           </li>
         </ol>
-      </div>
+      </Cdiv>
       ■ 적용 일자 : 2023년 12월 27일
-      <br />
-    </>
+    </TermBox>
   );
 };
 

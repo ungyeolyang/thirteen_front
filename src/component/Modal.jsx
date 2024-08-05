@@ -36,14 +36,19 @@ const ModalStyle = styled.div`
       font-weight: 700;
       button {
         position: absolute;
-        top: 15px;
+        top: 9px;
         right: 15px;
         width: 30px;
-        font-size: 21px;
+        font-size: 23px;
         font-weight: 700;
         text-align: center;
         color: #999;
         background-color: transparent;
+        border: none;
+        cursor: pointer;
+        &:hover {
+          color: black;
+        }
       }
     }
     main {
@@ -93,7 +98,7 @@ const Button = styled.button`
 `;
 
 const Modal = (props) => {
-  const { open, confirm, close, type, header, children } = props;
+  const { open, confirm, close, type, header, children, yes, no } = props;
 
   return (
     <ModalStyle>
@@ -106,8 +111,8 @@ const Modal = (props) => {
             </header>
             <main>{children}</main>
             <footer>
-              {type && <Button onClick={confirm}>확인</Button>}
-              <Button onClick={close}>취소</Button>
+              {type && <Button onClick={confirm}>{yes ? yes : `확인`}</Button>}
+              <Button onClick={close}>{no ? no : `취소`}</Button>
             </footer>
           </section>
         )}

@@ -1,7 +1,9 @@
 import axios from "axios";
 import Common from "../utils/Common";
 
-const AxiosInstance = axios.create({});
+const AxiosInstance = axios.create({
+  baseURL: Common.DOMAIN,
+});
 
 AxiosInstance.interceptors.request.use(
   async (config) => {

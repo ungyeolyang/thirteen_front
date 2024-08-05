@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { GoCheckCircle, GoCheckCircleFill } from "react-icons/go";
 import { IoIosArrowForward } from "react-icons/io";
+import Button from "../../component/Button";
 
 const TermBox = styled.div`
   overflow-y: scroll;
@@ -39,13 +40,13 @@ const Div = styled.div`
   }
 `;
 
-const Terms = ({ setIsAgree }) => {
-  const [checkedItems, setCheckedItems] = useState({
-    all: false,
-    essential1: false,
-    essential2: false,
-  });
-
+const Terms = ({
+  setIsAgree,
+  setModalOpen,
+  setHeader,
+  checkedItems,
+  setCheckedItems,
+}) => {
   const onChangeAll = (e) => {
     const { checked } = e.target;
     setCheckedItems({
@@ -69,6 +70,15 @@ const Terms = ({ setIsAgree }) => {
         all: allChecked,
       };
     });
+  };
+
+  const onClickTerm = () => {
+    setModalOpen(true);
+    setHeader("서비스 이용약관");
+  };
+  const onClickCollectTerm = () => {
+    setModalOpen(true);
+    setHeader("개인정보 수집 및 이용약관");
   };
 
   return (
@@ -98,7 +108,7 @@ const Terms = ({ setIsAgree }) => {
           hidden
         />
         <label for="essential1">[필수] 서비스 이용약관 동의</label>
-        <div>
+        <div onClick={onClickTerm}>
           <IoIosArrowForward />
         </div>
       </Div>
@@ -114,17 +124,16 @@ const Terms = ({ setIsAgree }) => {
           hidden
         />
         <label for="essential2">[필수] 개인정보 수집 및 이용 동의</label>
-        <div>
+        <div onClick={onClickCollectTerm}>
           <IoIosArrowForward />
         </div>
       </Div>
-
-      <button
+      <Button
         disabled={!(checkedItems.essential1 & checkedItems.essential2)}
         onClick={() => setIsAgree(true)}
       >
         다음
-      </button>
+      </Button>
     </>
   );
 };

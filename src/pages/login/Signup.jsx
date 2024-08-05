@@ -26,10 +26,11 @@ const ButtonContainer = styled.div`
 
 const Error = styled.div`
   color: #ff3f3f;
-  font-size: 24px;
+  font-size: 20px;
   justify-content: flex-start;
   display: ${({ children }) => (children === "" ? `none` : `flex`)};
 `;
+const ErrorBox = styled.div``;
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -39,8 +40,8 @@ const Signup = () => {
   const [inputNick, setInputNick] = useState("");
   const [inputEmail, setInputEmail] = useState("");
   const [checkEmail, setCheckEmail] = useState("");
-  const [inputCert, setInputCert] = useState("");
-  const [checkCert, setCheckCert] = useState("");
+  const [inputCert, setInputCert] = useState(0);
+  const [checkCert, setCheckCert] = useState(0);
 
   const [idMessage, setIdMessage] = useState("");
   const [pwMessage, setPwMessage] = useState("");
@@ -74,7 +75,7 @@ const Signup = () => {
   const existId = async (id) => {
     try {
       const rsp = await AuthAxiosApi.existInfo(id, 1);
-      console.log(`아이디:` + rsp.data);
+      // console.log(`아이디:` + rsp.data);
       if (rsp.data) {
         setIdMessage("사용할 수 없는 아이디입니다. 다른 아이디를 입력해주세요");
         setIsId(false);
@@ -102,36 +103,38 @@ const Signup = () => {
   };
 
   const onBlurNick = () => {
+    const nickRegex = /^[a-zA-Z0-9가-힣]{2,16}$/;
     if (!inputNick) {
       setNickMessage("닉네임: 필수 정보입니다.");
       setIsNick(false);
+    } else if (!nickRegex.test(inputNick)) {
+      setNickMessage("닉네임: 2~16자의 숫자,영문자, 한글을 사용해주세요.");
+      setIsNick(false);
     } else {
       setNickMessage("");
-      existNick(inputNick);
+      setIsNick(true);
     }
   };
 
-  const existNick = async (nick) => {
-    try {
-      const rsp = await AuthAxiosApi.existInfo(nick, 3);
-      console.log(`닉네임:` + rsp.data);
-      if (rsp.data) {
-        setNickMessage(
-          "사용할 수 없는 닉네임입니다. 다른 닉네임을 입력해주세요"
-        );
-        setIsNick(false);
-      } else {
-        setNickMessage("");
-        setIsNick(true);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const existNick = async (nick) => {
+  //   try {
+  //     const rsp = await AuthAxiosApi.existInfo(nick, 3);
+  //     console.log(`닉네임:` + rsp.data);
+  //     if (rsp.data) {
+  //       setNickMessage(
+  //         "사용할 수 없는 닉네임입니다. 다른 닉네임을 입력해주세요"
+  //       );
+  //       setIsNick(false);
+  //     } else {
+  //       setNickMessage("");
+  //       setIsNick(true);
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
   const onChangeEmail = (e) => {
-    if (checkEmail !== e.target.value) {
-      setIsClickCert(false);
-    }
     setInputEmail(e.target.value);
   };
 
@@ -152,7 +155,7 @@ const Signup = () => {
   const existEmail = async (email) => {
     try {
       const rsp = await AuthAxiosApi.existInfo(email, 2);
-      console.log(`이메일:` + rsp.data);
+      // console.log(`이메일:` + rsp.data);
       if (rsp.data) {
         setEmailMessage(
           "사용할 수 없는 이메일입니다. 다른 이메일을 입력해주세요"
@@ -168,7 +171,9 @@ const Signup = () => {
   };
 
   const onClickCert = async () => {
-    if (isId && isPw && isNick && isEmail) {
+    if (!isEmail) {
+      alert("정확한 이메일을 입력해주세요.");
+    } else {
       const certification = Math.floor(Math.random() * 900000) + 100000;
       setCheckCert(certification);
       const templateParams = {
@@ -178,7 +183,7 @@ const Signup = () => {
       try {
         await emailjs.send(
           "service_kr7pxmb",
-          "template_lrutw4m",
+          "template_2girkj8",
           templateParams,
           "WQbPpTPtl4ML1Reqd"
         );
@@ -206,7 +211,7 @@ const Signup = () => {
   };
 
   const onBlurCert = () => {
-    if (inputCert == checkCert) {
+    if (parseInt(inputCert) === checkCert) {
       setIsCert(true);
       setCertMessage("");
     } else {
@@ -224,7 +229,6 @@ const Signup = () => {
           inputPw,
           inputNick
         );
-        console.log(rsp.data);
         if (rsp.data) {
           login();
         }
@@ -245,9 +249,8 @@ const Signup = () => {
             onChange={(e) => setInputId(e.target.value)}
             onBlur={onBlurId}
             maxLength={20}
-            onKeyDown={(e) =>
-              Common.onKeyDownEnter(e, isClickCert ? onClickJoin : onClickCert)
-            }
+            onKeyDown={(e) => Common.onKeyDownEnter(e, onClickJoin)}
+            style={{ border: idMessage && "3px solid red" }}
           />
         </InputBox>
         <InputBox>
@@ -258,9 +261,8 @@ const Signup = () => {
             onChange={(e) => setInputPw(e.target.value)}
             onBlur={onBlurPw}
             maxLength={20}
-            onKeyDown={(e) =>
-              Common.onKeyDownEnter(e, isClickCert ? onClickJoin : onClickCert)
-            }
+            onKeyDown={(e) => Common.onKeyDownEnter(e, onClickJoin)}
+            style={{ border: pwMessage && "3px solid red" }}
           />
           {isEye ? (
             <GoEye
@@ -285,9 +287,8 @@ const Signup = () => {
             placeholder="닉네임"
             onChange={(e) => setInputNick(e.target.value)}
             onBlur={onBlurNick}
-            onKeyDown={(e) =>
-              Common.onKeyDownEnter(e, isClickCert ? onClickJoin : onClickCert)
-            }
+            onKeyDown={(e) => Common.onKeyDownEnter(e, onClickJoin)}
+            style={{ border: nickMessage && "3px solid red" }}
           />
         </InputBox>
         <InputBox>
@@ -301,13 +302,26 @@ const Signup = () => {
               Common.onKeyDownEnter(e, isClickCert ? onClickJoin : onClickCert)
             }
             disabled={isClickCert}
+            style={{ border: emailMessage && "3px solid red" }}
           />
-          <button>인증</button>
+          <button
+            onClick={
+              isClickCert
+                ? () => {
+                    setIsClickCert(false);
+                  }
+                : onClickCert
+            }
+          >
+            {isClickCert ? `수정` : `인증`}
+          </button>
         </InputBox>
-        <Error>{idMessage}</Error>
-        <Error>{pwMessage}</Error>
-        <Error>{nickMessage}</Error>
-        <Error>{emailMessage}</Error>
+        <ErrorBox>
+          <Error>{idMessage}</Error>
+          <Error>{pwMessage}</Error>
+          <Error>{nickMessage}</Error>
+          <Error>{emailMessage}</Error>
+        </ErrorBox>
         {isClickCert && (
           <>
             <InputBox>
@@ -329,11 +343,7 @@ const Signup = () => {
           >
             취소
           </button>
-          {isClickCert ? (
-            <button onClick={onClickJoin}>가입하기</button>
-          ) : (
-            <button onClick={onClickCert}>인증하기</button>
-          )}
+          <button onClick={onClickJoin}>가입하기</button>
         </ButtonContainer>
       </SignBox>
     </>

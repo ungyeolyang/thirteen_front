@@ -6,7 +6,7 @@ import Kakao from "../../image/kakao-talk.png";
 
 const Circle = styled.div`
   display: flex;
-  width: 13%;
+  width: 10%;
   overflow: hidden;
 
   img {
@@ -34,7 +34,6 @@ const KaKaoBox = styled.div`
   @media screen and (max-width: 425px) {
     border-bottom: none;
   }
-
   &:hover {
     background: #dac24a;
   }

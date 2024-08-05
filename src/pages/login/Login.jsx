@@ -6,6 +6,8 @@ import Common from "../../utils/Common";
 import AuthAxiosApi from "../../api/AuthAxiosApi";
 import KakaoLogin from "./KakaoLogin";
 import InputBox from "../../component/InputBox";
+import Button from "../../component/Button";
+import MyAxiosApi from "../../api/MyAxiosApi";
 
 const Line = styled.div`
   display: flex;
@@ -29,26 +31,10 @@ const SignupBox = styled.div`
   cursor: pointer;
   color: ${({ color }) => color && color};
   &:hover {
-    color: ${({ hover }) => (hover ? hover : `#bf00ff`)};
+    color: ${({ hover }) => (hover ? hover : `#002A70`)};
   }
 `;
-const Button = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 70%;
-  height: 50px;
-  color: white;
-  font-size: 23px;
-  font-weight: bold;
-  overflow: hidden;
-  border-radius: 10px;
-  cursor: pointer;
-  background-color: ${({ color }) => color && color};
-  &:hover {
-    background-color: ${({ hover }) => hover && hover};
-  }
-`;
+
 const HeaderBox = styled.div`
   width: 70%;
   font-weight: bold;
@@ -88,20 +74,32 @@ const Login = () => {
   const login = async () => {
     try {
       const res = await AuthAxiosApi.login(inputId, inputPw);
-      // console.log(res.data);
       if (res.data.grantType === "Bearer") {
         Common.setAccessToken(res.data.accessToken);
         Common.setRefreshToken(res.data.refreshToken);
+        authority();
         navigate("/");
       } else {
         setMessage("아이디또는 비밀번호를 잘못 입력했습니다.");
         setInputPw("");
-        console.log("오류");
       }
     } catch (err) {
       console.log(err);
-      setMessage("아이디또는 비밀번호를 잘못 입력했습니다.");
+      setMessage("아이디또는 비밀번호 입력 오류.");
       setInputPw("");
+    }
+  };
+  const authority = async () => {
+    try {
+      const res = await MyAxiosApi.authority();
+      console.log(res.data);
+      if (res.data.includes("USER")) {
+        navigate("/");
+      } else {
+        navigate("/admin");
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -133,7 +131,7 @@ const Login = () => {
         />
       </InputBox>
       <Error>{message}</Error>
-      <Button onClick={onClickLogin} color="red" hover="RGB(193, 78, 78)">
+      <Button onClick={onClickLogin}>
         <div>로그인 </div>
       </Button>
       <Button>
@@ -146,7 +144,7 @@ const Login = () => {
             navigate("signup", { state: { fromLogin: false } });
           }}
           color="RGB(113, 153, 255)"
-          hover="RGB(4, 74, 255)"
+          hover="#002A8E"
         >
           회원가입
         </SignupBox>

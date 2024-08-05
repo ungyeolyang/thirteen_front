@@ -9,6 +9,7 @@ import SignupPage from "./pages/login/SignupPage";
 import Main from "./pages/main/Main";
 import Suggestion from "./pages/suggestion/Suggestion";
 import FindPage from "./pages/login/FindPage";
+import AdminPage from "./pages/admin/AdminPage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -34,6 +35,7 @@ function App() {
               </Route>
               <Route path="suggestion" element={<Suggestion />} />
             </Route>
+            <Route path="admin" element={<AdminPage />} />
           </Routes>
         </Router>
       </UserStore>
