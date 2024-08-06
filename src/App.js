@@ -10,6 +10,7 @@ import Main from "./pages/main/Main";
 import Suggestion from "./pages/suggestion/Suggestion";
 import FindPage from "./pages/login/FindPage";
 import AdminPage from "./pages/admin/AdminPage";
+import MyPage from "./pages/my/MyPage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -33,6 +34,7 @@ function App() {
                 <Route path="find" element={<FindPage />} />
                 <Route path="signup" element={<SignupPage />} />
               </Route>
+              <Route path="my" element={<MyPage />} />
               <Route path="suggestion" element={<Suggestion />} />
             </Route>
             <Route path="admin" element={<AdminPage />} />

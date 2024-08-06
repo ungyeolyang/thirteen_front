@@ -4,8 +4,8 @@ const Button = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 65%;
-  height: 50px;
+  width: ${({ width }) => (width ? width : `65%`)};
+  height: ${({ height }) => (height ? height : `50px`)};
   color: white;
   font-size: 23px;
   font-weight: bold;
