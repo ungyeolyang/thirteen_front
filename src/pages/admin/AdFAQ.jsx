@@ -82,7 +82,7 @@ const AdFAQ = () => {
         <Td>{user.email}</Td>
         <Td>{user.content}</Td>
         <Td>
-          <Button width={`10%`} backgroundColor={`#4aa1e7`}>
+          <Button width={`80%`} backgroundColor={`#4aa1e7`}>
             답변
           </Button>
         </Td>
@@ -93,7 +93,12 @@ const AdFAQ = () => {
     <>
       <Container>
         <Box>
-          <Table header={"FAQ"} list={list(userEx)} border={true}></Table>
+          <Table
+            header={"FAQ"}
+            list={list(userEx)}
+            border={true}
+            button={true}
+          ></Table>
           <PagingDiv></PagingDiv>
         </Box>
       </Container>

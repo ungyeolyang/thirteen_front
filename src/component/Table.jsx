@@ -25,12 +25,31 @@ const StyledTable = styled.div`
     border-radius: ${({ border }) => (border ? `10px 10px 0 0` : `none`)};
   }
 
-  div {
+  .Div {
     width: 100%;
     height: 90%;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+  }
+
+  .Button {
+    display: ${({ button }) => (button ? `flex` : `none`)};
+    cursor: pointer;
+    width: 10%;
+    height: 80%;
+    background-color: #4aa1e7;
+    margin-bottom: 2%;
+    border-radius: 30px;
+    /* text-align: center; */
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    &:hover {
+      background: #f1f1f1;
+      color: #000;
+    }
   }
 
   table {
@@ -55,18 +74,32 @@ const StyledTable = styled.div`
     font-size: 1rem;
   }
 `;
+const ButtonBox = styled.div`
+  width: 100%;
+  display: flex;
+  position: relative;
+  right: 2%;
+  align-items: center;
+  justify-content: flex-end;
+`;
 
 const Table = (props) => {
-  const { header, list } = props;
+  const { header, list, btnFun } = props;
   return (
     <StyledTable
       width={props.width}
       height={props.height}
       color={props.color}
       border={props.border}
+      button={props.button}
     >
       <head>{header}</head>
-      <div>
+      <div className="Div">
+        <ButtonBox>
+          <div className="Button" onClick={btnFun}>
+            글쓰기
+          </div>
+        </ButtonBox>
         <table>
           <tbody>{list}</tbody>
         </table>

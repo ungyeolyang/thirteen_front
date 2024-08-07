@@ -103,7 +103,7 @@ const PagingDiv = styled.div`
 `;
 
 const AdMember = () => {
-  const [member, setMember] = useState();
+  const [member, setMember] = useState([]);
 
   useEffect(() => {
     const getAlluser = async () => {
@@ -140,12 +140,12 @@ const AdMember = () => {
   const head = () => {
     return (
       <Head>
-        <Th>이름</Th>
-        <Th>이메일</Th>
-        <Th>생성날자</Th>
-        <Th>탈퇴여부</Th>
-        <Th>카카오</Th>
-        <Th></Th>
+        <p>이름</p>
+        <p>이메일</p>
+        <p>생성날자</p>
+        <p>탈퇴여부</p>
+        <p>카카오</p>
+        <p></p>
       </Head>
     );
   };

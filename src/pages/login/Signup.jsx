@@ -175,6 +175,7 @@ const Signup = () => {
       alert("정확한 이메일을 입력해주세요.");
     } else {
       const certification = Math.floor(Math.random() * 900000) + 100000;
+      console.log(certification); //인증번호
       setCheckCert(certification);
       const templateParams = {
         email: inputEmail,
