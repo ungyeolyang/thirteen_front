@@ -4,6 +4,7 @@ import { FaCoins } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import MyInfo from "./MyInfo";
 import MyAxiosApi from "../../api/MyAxiosApi";
+import Refund from "./Refund";
 
 const Container = styled.div`
   display: flex;
@@ -48,7 +49,6 @@ const InfoBox = styled.div`
 
 const MyPage = () => {
   const [category, setCategory] = useState("정보수정");
-
   const [user, setUser] = useState();
 
   useEffect(() => {
@@ -72,8 +72,8 @@ const MyPage = () => {
     switch (category) {
       case `정보수정`:
         return <MyInfo user={user} />;
-      case "환급액확인":
-        return;
+      case "환급액 확인":
+        return <Refund user={user} />;
       default:
         return;
     }
@@ -81,17 +81,17 @@ const MyPage = () => {
 
   useEffect(() => {
     info();
-  }, [category]);
+  }, []);
 
   return (
     <>
       <Container>
         <MenuBox>
-          <div>
+          <div onClick={() => setCategory("정보수정")}>
             <IoPersonCircleOutline style={{ fontSize: `60px` }} />
             정보수정
           </div>
-          <div>
+          <div onClick={() => setCategory("환급액 확인")}>
             <FaCoins style={{ fontSize: `45px` }} />
             환급액 확인
           </div>

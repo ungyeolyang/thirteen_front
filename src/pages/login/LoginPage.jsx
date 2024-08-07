@@ -2,6 +2,8 @@ import styled, { css, keyframes } from "styled-components";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../image/로고.svg";
 import Modal from "../../component/Modal";
+import { useEffect } from "react";
+import Common from "../../utils/Common";
 
 const left = keyframes`
   0% {
@@ -92,18 +94,23 @@ const LoginPage = () => {
 
   const flexDirection = location.pathname === "/login" ? "row" : "row-reverse";
 
+  useEffect(() => {
+    Common.getAccessToken() && navigate("/");
+  }, []);
+
   return (
     <>
-      <Container flexDirection={flexDirection}>
-        <Odiv>
-          <LogoBox onClick={() => navigate("/")} />
-          <Outlet />
-        </Odiv>
-        <Pdiv>
-          <Pentagon animationType={animationType} />
-        </Pdiv>
-      </Container>
-      <Modal></Modal>
+      {!Common.getAccessToken() && (
+        <Container flexDirection={flexDirection}>
+          <Odiv>
+            <LogoBox onClick={() => navigate("/")} />
+            <Outlet />
+          </Odiv>
+          <Pdiv>
+            <Pentagon animationType={animationType} />
+          </Pdiv>
+        </Container>
+      )}
     </>
   );
 };

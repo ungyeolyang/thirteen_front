@@ -4,11 +4,9 @@ const InputBox = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  width: 70%;
-  height: 50px;
+  width: ${({ width }) => (width ? width : `70%`)};
+  height: ${({ height }) => (height ? height : `50px`)};
   padding: 0 20px;
-  /* border: 1px solid black; */
-  /* border-radius: 10px; */
   input:focus {
     border: 3px solid rgb(113, 153, 255);
   }
@@ -19,7 +17,8 @@ const InputBox = styled.div`
     width: 100%;
     padding: 8px 4px;
     font-weight: bold;
-    background-color: transparent;
+    background-color: ${({ background }) =>
+      background ? background : `transparent`};
     border: 1px solid black;
     border-radius: 10px;
     outline: none;

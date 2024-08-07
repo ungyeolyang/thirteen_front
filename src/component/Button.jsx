@@ -7,7 +7,7 @@ const Button = styled.div`
   width: ${({ width }) => (width ? width : `65%`)};
   height: ${({ height }) => (height ? height : `50px`)};
   color: white;
-  font-size: 23px;
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : `23px`)};
   font-weight: bold;
   overflow: hidden;
   border-radius: 10px;
