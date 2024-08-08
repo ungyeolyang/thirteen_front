@@ -15,7 +15,10 @@ const StyledFooter = styled.div`
 `;
 const Footer = () => {
   const location = useLocation();
-  if (location.pathname.includes("/login")) {
+  if (
+    location.pathname.includes("/login") ||
+    location.pathname.includes("/admin")
+  ) {
     return null;
   }
 

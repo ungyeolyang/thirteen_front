@@ -36,8 +36,8 @@ function App() {
               </Route>
               <Route path="my" element={<MyPage />} />
               <Route path="suggestion" element={<Suggestion />} />
+              <Route path="admin" element={<AdminPage />} />
             </Route>
-            <Route path="admin" element={<AdminPage />} />
           </Routes>
         </Router>
       </UserStore>
