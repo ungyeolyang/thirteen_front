@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import MyInfo from "./MyInfo";
 import MyAxiosApi from "../../api/MyAxiosApi";
 import Refund from "./Refund";
+import EditPw from "./EditPw";
+import EditEamil from "./EditEmail";
+import Modal from "../../component/Modal";
 
 const Container = styled.div`
   display: flex;
@@ -38,7 +41,6 @@ const RightBox = styled.div`
   align-items: center;
   width: 70%;
   height: 100vh;
-  background: blue;
 `;
 const InfoBox = styled.div`
   width: 90%;
@@ -50,6 +52,12 @@ const InfoBox = styled.div`
 const MyPage = () => {
   const [category, setCategory] = useState("정보수정");
   const [user, setUser] = useState();
+  const [input, setInput] = useState("");
+  const [message, setMessage] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [header, setHeader] = useState();
+  const [type, setType] = useState();
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const myInfo = async () => {
@@ -66,14 +74,26 @@ const MyPage = () => {
       }
     };
     myInfo();
-  }, []);
+  }, [refresh]);
 
   const info = () => {
     switch (category) {
       case `정보수정`:
-        return <MyInfo user={user} />;
+        return (
+          <MyInfo
+            user={user}
+            setModalOpen={setModalOpen}
+            setHeader={setHeader}
+            setType={setType}
+            onModify={onModify}
+            category={category}
+            setMessage={setMessage}
+            message={message}
+            setRefresh={setRefresh}
+          />
+        );
       case "환급액 확인":
-        return <Refund user={user} />;
+        return <Refund user={user} onModify={onModify} />;
       default:
         return;
     }
@@ -82,6 +102,55 @@ const MyPage = () => {
   useEffect(() => {
     info();
   }, []);
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setRefresh((prev) => !prev);
+    setMessage("");
+    setInput("");
+  };
+
+  const onModify = async (info, inputType) => {
+    try {
+      const res = await MyAxiosApi.editInfo(info, inputType);
+      if (res.data) {
+        // console.log("수정성공");
+        closeModal();
+      } else {
+        console.log("수정실패");
+      }
+    } catch (e) {
+      console.log(e, "수정 오류");
+    }
+  };
+
+  const onEdit = (type) => {
+    switch (type) {
+      case 2:
+        return (
+          <EditPw
+            input={input}
+            setInput={setInput}
+            message={message}
+            setMessage={setMessage}
+            onModify={onModify}
+          />
+        );
+      case 4:
+        return (
+          <EditEamil
+            closeModal={closeModal}
+            member={user}
+            input={input}
+            setInput={setInput}
+            message={message}
+            setMessage={setMessage}
+            onModify={onModify}
+          />
+        );
+      default:
+    }
+  };
 
   return (
     <>
@@ -100,6 +169,9 @@ const MyPage = () => {
         <RightBox>
           <InfoBox>{info()}</InfoBox>
         </RightBox>
+        <Modal open={modalOpen} close={closeModal} header={header}>
+          {onEdit(type)}
+        </Modal>
       </Container>
     </>
   );

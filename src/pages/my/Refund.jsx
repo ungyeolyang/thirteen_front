@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Button from "../../component/Button";
 import InputBox from "../../component/InputBox";
 import { GiMeal } from "react-icons/gi";
+import { useState } from "react";
 
 const Container = styled.div`
   display: flex;
@@ -45,8 +46,9 @@ const Line = styled.div`
   height: 10%;
 `;
 
-const Refund = ({ user }) => {
+const Refund = ({ user, onModify }) => {
   const year = new Date().getFullYear();
+  const [inputPay, setInputPay] = useState(null);
 
   return (
     <>
@@ -57,9 +59,22 @@ const Refund = ({ user }) => {
             <input
               type="text"
               placeholder={user.pay ? user.pay : `연봉을 입력해주세요`}
+              value={inputPay}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  setInputPay(value);
+                }
+              }}
             />
           </InputBox>
-          <Button width={`20%`} height={"30px"}>
+          <Button
+            width={`20%`}
+            height={"30px"}
+            onClick={() => {
+              onModify(inputPay, 5);
+            }}
+          >
             수정
           </Button>
         </Lbox>
