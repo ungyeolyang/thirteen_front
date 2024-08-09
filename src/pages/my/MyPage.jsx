@@ -8,6 +8,7 @@ import Refund from "./Refund";
 import EditPw from "./EditPw";
 import EditEamil from "./EditEmail";
 import Modal from "../../component/Modal";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -50,11 +51,13 @@ const InfoBox = styled.div`
 `;
 
 const MyPage = () => {
+  const navigate = useNavigate();
   const [category, setCategory] = useState("정보수정");
   const [user, setUser] = useState();
   const [input, setInput] = useState("");
   const [message, setMessage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [delModalOpen, setDelModalOpen] = useState(false);
   const [header, setHeader] = useState();
   const [type, setType] = useState();
   const [refresh, setRefresh] = useState(false);
@@ -109,6 +112,10 @@ const MyPage = () => {
     setMessage("");
     setInput("");
   };
+  const closeDelModal = () => {
+    setDelModalOpen(false);
+    setRefresh((prev) => !prev);
+  };
 
   const onModify = async (info, inputType) => {
     try {
@@ -151,6 +158,16 @@ const MyPage = () => {
       default:
     }
   };
+  const onClickDel = async () => {
+    try {
+      const res = await MyAxiosApi.withdraw();
+      if (res.data) {
+        alert("회원탈퇴가 완료되었습니다.");
+        localStorage.clear();
+        navigate("/");
+      }
+    } catch (e) {}
+  };
 
   return (
     <>
@@ -164,13 +181,28 @@ const MyPage = () => {
             <FaCoins style={{ fontSize: `45px` }} />
             환급액 확인
           </div>
-          <div>회원탈퇴</div>
+          <div
+            onClick={() => {
+              setDelModalOpen(true);
+            }}
+          >
+            회원탈퇴
+          </div>
         </MenuBox>
         <RightBox>
           <InfoBox>{info()}</InfoBox>
         </RightBox>
         <Modal open={modalOpen} close={closeModal} header={header}>
           {onEdit(type)}
+        </Modal>
+        <Modal
+          open={delModalOpen}
+          close={closeDelModal}
+          header={"회원탈퇴"}
+          type={true}
+          confirm={onClickDel}
+        >
+          정말로 탈퇴하시겠습니까?
         </Modal>
       </Container>
     </>

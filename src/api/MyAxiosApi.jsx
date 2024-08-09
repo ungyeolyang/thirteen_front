@@ -22,5 +22,8 @@ const MyAxiosApi = {
     };
     return await AxiosInstance.post(LOGO + `/checkpw`, member);
   },
+  withdraw: async () => {
+    return await AxiosInstance.get(LOGO + "/withdraw");
+  },
 };
 export default MyAxiosApi;

@@ -74,6 +74,8 @@ const Login = () => {
   const login = async () => {
     try {
       const res = await AuthAxiosApi.login(inputId, inputPw);
+      console.log(res.data);
+
       if (res.data.grantType === "Bearer") {
         Common.setAccessToken(res.data.accessToken);
         Common.setRefreshToken(res.data.refreshToken);
@@ -85,10 +87,11 @@ const Login = () => {
       }
     } catch (err) {
       console.log(err);
-      setMessage("아이디또는 비밀번호 입력 오류.");
+      setMessage("아이디또는 비밀번호를 잘못 입력했습니다.");
       setInputPw("");
     }
   };
+
   const authority = async () => {
     try {
       const res = await MyAxiosApi.authority();
