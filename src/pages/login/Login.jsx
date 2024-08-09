@@ -96,10 +96,10 @@ const Login = () => {
     try {
       const res = await MyAxiosApi.authority();
       console.log(res.data);
-      if (res.data.includes("USER")) {
-        navigate("/");
-      } else {
+      if (res.data.includes("ADMIN")) {
         navigate("/admin");
+      } else {
+        navigate("/");
       }
     } catch (e) {
       console.log(e);

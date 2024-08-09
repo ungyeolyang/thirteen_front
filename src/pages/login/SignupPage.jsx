@@ -39,10 +39,6 @@ const SignupPage = () => {
     setModalOpen(false);
   };
 
-  useEffect(() => {
-    header && contents();
-  }, [header]);
-
   return (
     <>
       {isAgree ? (

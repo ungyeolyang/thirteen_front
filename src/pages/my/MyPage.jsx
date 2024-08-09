@@ -49,6 +49,14 @@ const InfoBox = styled.div`
   border-radius: 5%;
   background-color: silver;
 `;
+const DelBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: silver;
+  width: 300px;
+  height: 300px;
+`;
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -202,7 +210,7 @@ const MyPage = () => {
           type={true}
           confirm={onClickDel}
         >
-          정말로 탈퇴하시겠습니까?
+          <DelBox>정말로 탈퇴하시겠습니까?</DelBox>
         </Modal>
       </Container>
     </>

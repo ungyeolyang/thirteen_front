@@ -30,9 +30,10 @@ const ModalStyle = styled.div`
     animation: modal-show 0.3s;
     overflow: hidden;
     header {
+      color: white;
       position: relative;
       padding: 16px 64px 16px 16px;
-      background-color: #f1f1f1;
+      background-color: #46a1cc;
       font-weight: 700;
       button {
         position: absolute;
@@ -62,7 +63,6 @@ const ModalStyle = styled.div`
       button {
         padding: 6px 12px;
         color: #fff;
-        background-color: #6c757d;
         border-radius: 5px;
         font-size: 13px;
       }
@@ -95,6 +95,11 @@ const Button = styled.button`
   margin-right: 10px;
   border: 0;
   width: 60px;
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor ? backgroundColor : `#6c757d`};
+  &:hover {
+    background-color: ${({ hover }) => (hover ? hover : `#8c98a3`)};
+  }
 `;
 
 const Modal = (props) => {
@@ -107,11 +112,19 @@ const Modal = (props) => {
           <section>
             <header>
               {header}
-              <button onClick={close}>&times;</button>
+              {/* <button onClick={close}>&times;</button> */}
             </header>
             <main>{children}</main>
             <footer>
-              {type && <Button onClick={confirm}>{yes ? yes : `확인`}</Button>}
+              {type && (
+                <Button
+                  onClick={confirm}
+                  backgroundColor={`#c80000`}
+                  hover={`RGB(193, 78, 78)`}
+                >
+                  {yes ? yes : `확인`}
+                </Button>
+              )}
               <Button onClick={close}>{no ? no : `취소`}</Button>
             </footer>
           </section>

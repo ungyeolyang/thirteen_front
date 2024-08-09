@@ -133,7 +133,7 @@ const MyInfo = ({
             <Profile
               src={previewUrl || user?.image}
               size={`100%`}
-              onClick={onClickInputFile}
+              onClick={user?.social === "COMMON" ? onClickInputFile : undefined}
             >
               <input
                 type="file"
@@ -164,6 +164,7 @@ const MyInfo = ({
                 type="text"
                 placeholder={user?.nick}
                 onChange={(e) => setInputNick(e.target.value)}
+                disabled={user?.social === "COMMON" ? false : true}
               />
             </InputBox>
             <Error>{message}</Error>
