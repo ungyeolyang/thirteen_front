@@ -15,7 +15,7 @@ const left = keyframes`
 `;
 const right = keyframes`
   0% {
-    transform: translateX(-65%)
+    transform: translateX(-60%)
   }
   100% {
     transform: translateX(0)

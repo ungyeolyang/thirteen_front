@@ -55,16 +55,16 @@ const Refund = ({ user, onModify }) => {
   const calculateRefund = () => {
     // 1. 근로소득공제 계산
     let workIncomeDeduction;
-    if (user.pay <= 5000) {
-      workIncomeDeduction = user.pay * 0.7;
-    } else if (user.pay <= 12000) {
-      workIncomeDeduction = 3500 + (user.pay - 5000) * 0.4;
+    if (user?.pay <= 5000) {
+      workIncomeDeduction = user?.pay * 0.7;
+    } else if (user?.pay <= 12000) {
+      workIncomeDeduction = 3500 + (user?.pay - 5000) * 0.4;
     } else {
-      workIncomeDeduction = 9500 + (user.pay - 12000) * 0.05;
+      workIncomeDeduction = 9500 + (user?.pay - 12000) * 0.05;
     }
 
     // 2. 근로소득 계산
-    const workIncome = user.pay - workIncomeDeduction;
+    const workIncome = user?.pay - workIncomeDeduction;
 
     // 3. 과세표준 계산 (소득공제 1,500만원 가정)
     const incomeDeduction = 1500;
@@ -125,7 +125,7 @@ const Refund = ({ user, onModify }) => {
 
   useEffect(() => {
     calculateRefund();
-  }, [user.pay, paidTax]);
+  }, [user?.pay, paidTax]);
 
   return (
     <>
@@ -135,7 +135,7 @@ const Refund = ({ user, onModify }) => {
           <InputBox background={`white`} width={`100%`}>
             <input
               type="text"
-              placeholder={user.pay ? user.pay : `연봉을 입력해주세요`}
+              placeholder={user?.pay ? user?.pay : `연봉을 입력해주세요`}
               value={inputPay}
               onChange={(e) => {
                 const value = e.target.value;
@@ -149,7 +149,7 @@ const Refund = ({ user, onModify }) => {
             width={`20%`}
             height={"30px"}
             onClick={() => {
-              onModify(inputPay, 5);
+              inputPay && onModify(inputPay, 5);
             }}
           >
             수정
@@ -158,7 +158,9 @@ const Refund = ({ user, onModify }) => {
           <InputBox background={`white`} width={`100%`}>
             <input
               type="text"
-              placeholder={user.pay ? user.pay : `납부한 소득세를 입력해주세요`}
+              placeholder={
+                user?.pay ? user?.pay : `납부한 소득세를 입력해주세요`
+              }
               value={paidTax}
               onChange={(e) => {
                 const value = e.target.value;

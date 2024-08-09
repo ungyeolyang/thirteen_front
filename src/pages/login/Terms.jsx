@@ -19,7 +19,7 @@ const Div = styled.div`
   position: relative;
   font-size: 24px;
   font-weight: bold;
-  width: 80%;
+  width: 65%;
   gap: 20px;
 
   label {
@@ -37,6 +37,7 @@ const Div = styled.div`
   }
   svg {
     cursor: pointer;
+    color: RGB(193, 78, 78);
   }
 `;
 

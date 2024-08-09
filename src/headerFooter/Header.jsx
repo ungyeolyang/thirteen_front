@@ -12,7 +12,7 @@ const StyledHeader = styled.div`
   gap: 5%;
   font-size: 30px;
   width: 100%;
-  height: 14vh;
+  height: 12vh;
 `;
 
 const Div = styled.div`
@@ -45,7 +45,8 @@ const Header = () => {
       <StyledHeader>
         <Div onClick={() => navigate("/")}>로고</Div>
         <Div onClick={() => navigate("/login")}>로그인</Div>
-        <Div onClick={() => navigate("/suggestion")}>추천</Div>
+        <Div onClick={() => navigate("/suggestion")}>카드 추천</Div>
+        <Div onClick={() => navigate("/stocksuggestion")}>주식 추천</Div>
       </StyledHeader>
     </>
   );

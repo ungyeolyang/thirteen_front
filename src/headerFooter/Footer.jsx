@@ -51,7 +51,8 @@ const Footer = () => {
 
   if (
     location.pathname.includes("/login") ||
-    location.pathname.includes("/admin")
+    location.pathname.includes("/admin") ||
+    location.pathname.includes("/my")
   ) {
     return null;
   }
@@ -69,7 +70,7 @@ const Footer = () => {
           <p>주소:서울특별시 강남구 역삼로</p>
           <p>전화번호 02-123-4567</p>
           <p>이메일 : annaidle99@gmail.com</p>
-          <p>CopyRight © 2024 Cinepic All Rights Reserved.</p>
+          <p>CopyRight © 2024 일공이오 All Rights Reserved.</p>
         </FooterBox>
       </StyledFooter>
       <Modal

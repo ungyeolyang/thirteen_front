@@ -19,29 +19,29 @@ const MenuBox = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 27px;
-  gap: 50px;
-  width: 30%;
-  height: 100vh;
-  background: red;
-
-  div {
-    display: flex;
-    width: 80%;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    &:hover {
-      color: RGB(113, 153, 255);
-    }
+  gap: 100px;
+  width: 20%;
+  height: 88vh;
+  box-shadow: 1px 1px 1px 1px silver;
+`;
+const Menu = styled.div`
+  display: flex;
+  width: 80%;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  color: ${({ active }) => active && `RGB(113, 153, 255)`};
+  cursor: pointer;
+  &:hover {
+    color: RGB(113, 153, 255);
   }
 `;
 const RightBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 70%;
-  height: 100vh;
+  width: 80%;
+  height: 88vh;
 `;
 const InfoBox = styled.div`
   width: 90%;
@@ -54,8 +54,8 @@ const DelBox = styled.div`
   justify-content: center;
   align-items: center;
   background-color: silver;
-  width: 300px;
-  height: 300px;
+  width: 100%;
+  height: 200px;
 `;
 
 const MyPage = () => {
@@ -181,21 +181,27 @@ const MyPage = () => {
     <>
       <Container>
         <MenuBox>
-          <div onClick={() => setCategory("정보수정")}>
+          <Menu
+            onClick={() => setCategory("정보수정")}
+            active={category === "정보수정"}
+          >
             <IoPersonCircleOutline style={{ fontSize: `60px` }} />
             정보수정
-          </div>
-          <div onClick={() => setCategory("환급액 확인")}>
+          </Menu>
+          <Menu
+            onClick={() => setCategory("환급액 확인")}
+            active={category === "환급액 확인"}
+          >
             <FaCoins style={{ fontSize: `45px` }} />
             환급액 확인
-          </div>
-          <div
+          </Menu>
+          <Menu
             onClick={() => {
               setDelModalOpen(true);
             }}
           >
             회원탈퇴
-          </div>
+          </Menu>
         </MenuBox>
         <RightBox>
           <InfoBox>{info()}</InfoBox>
@@ -210,7 +216,7 @@ const MyPage = () => {
           type={true}
           confirm={onClickDel}
         >
-          <DelBox>정말로 탈퇴하시겠습니까?</DelBox>
+          <DelBox>정말 탈퇴하시겠습니까?</DelBox>
         </Modal>
       </Container>
     </>

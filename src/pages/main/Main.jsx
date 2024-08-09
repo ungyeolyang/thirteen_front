@@ -111,6 +111,14 @@ const Main = () => {
   };
   return (
     <Container>
+      <p
+        onClick={() => {
+          navigate("my");
+        }}
+      >
+        마이페이지입니다.
+      </p>
+      <p onClick={onClickLogout}>로그아웃</p>
       {/* 첫 번째 페이지: 주식 추천과 카드 추천 */}
       <FullPageSection bgColor="#f7f7f7">
         <HalfHeightSection>
