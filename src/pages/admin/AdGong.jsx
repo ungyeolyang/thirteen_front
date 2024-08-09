@@ -57,7 +57,6 @@ const AdGong = () => {
   const [bno, setBno] = useState();
   const [gongList, setGongList] = useState([]);
   const [modalView, setModalView] = useState("");
-  // const [refresh, SetRefresh] = useState(false);
 
   useEffect(() => {
     const getGongJi = async () => {

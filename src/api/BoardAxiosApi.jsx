@@ -27,8 +27,8 @@ const BoardApi = {
   boardDelete: async (bno) => {
     return await AxiosInstance.post(LOGO + `/bdelete/${bno}`);
   },
-  comeBackUser: async (mid) => {
-    return await AxiosInstance.post(LOGO + `/userback/${mid}`);
+  comeBackUser: async (mid, tf) => {
+    return await AxiosInstance.post(LOGO + `/userback/${mid}/${tf}`);
   },
   getBoardDetail: async (bno) => {
     return await AxiosInstance.get(LOGO + `/bdetail/${bno}`);

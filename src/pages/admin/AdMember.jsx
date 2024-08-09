@@ -3,6 +3,8 @@ import Button from "../../component/Button";
 import Table from "../../component/Table";
 import { useEffect, useState } from "react";
 import BoardApi from "../../api/BoardAxiosApi";
+import BoardModalContent from "./BoardModalContent";
+import Modal from "../../component/Modal";
 
 const Container = styled.div`
   width: 100%;
@@ -97,6 +99,20 @@ const PagingDiv = styled.div`
 
 const AdMember = () => {
   const [member, setMember] = useState([]);
+  const [id, setID] = useState([]);
+  const [tf, setTF] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const openModal = () => {
+    setModalOpen((prev) => !prev);
+    return modalOpen;
+  };
+
+  const closeModal = () => {
+    setID("");
+    setTF(false);
+    setModalOpen(false);
+  };
 
   useEffect(() => {
     const getAlluser = async () => {
@@ -108,7 +124,27 @@ const AdMember = () => {
       } catch (e) {}
     };
     getAlluser();
-  }, []);
+  }, [modalOpen]);
+
+  const userComeOrBye = async () => {
+    try {
+      console.log(id);
+
+      const newTF = !tf;
+      const res = await BoardApi.comeBackUser(id, newTF);
+      closeModal();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const check = (ta) => {
+    if (ta === "TRUE") {
+      setTF(true);
+    } else {
+      setTF(false);
+    }
+  };
 
   const list = (list) => {
     return (
@@ -119,14 +155,40 @@ const AdMember = () => {
           <Td>{user.email}</Td>
           <Td>{user.mid}</Td>
           <Td>{user.social}</Td>
-          <Td>{user.image}</Td>
+          {/* <Td>{user.image}</Td> */}
+          <Td>{user.tf}</Td>
           <Td>
-            <Button backgroundColor={`#4aa1e7`} width={`60%`} height={`60%`}>
-              버튼
+            <Button
+              onClick={() => {
+                setID(user.mid);
+                check(user.tf);
+                openModal();
+              }}
+              backgroundColor={`#4aa1e7`}
+              width={`60%`}
+              height={`60%`}
+            >
+              수정
             </Button>
           </Td>
         </Tr>
       ))
+    );
+  };
+
+  const modalChildren = () => {
+    return (
+      <>
+        <BoardModalContent
+          title="회원관리"
+          value={true}
+          read={true}
+          content={
+            tf ? "회원을 탈퇴 시키겠습니까?" : "회원을 탈퇴 취소 시키겠습니까?"
+          }
+          buttonlist={[{ text: "수정", func: userComeOrBye }]}
+        />
+      </>
     );
   };
 
@@ -144,23 +206,31 @@ const AdMember = () => {
   };
 
   return (
-    <Container>
-      <Box>
-        <ChartBox>
-          <Graph></Graph>
-          <Donut></Donut>
-        </ChartBox>
-        <BoardBox>
-          <Table
-            color={`lightgray`}
-            width={`100%`}
-            header={head()}
-            list={list(member)}
-          />
-          <PagingDiv></PagingDiv>
-        </BoardBox>
-      </Box>
-    </Container>
+    <>
+      <Container>
+        <Box>
+          <ChartBox>
+            <Graph></Graph>
+            <Donut></Donut>
+          </ChartBox>
+          <BoardBox>
+            <Table
+              color={`lightgray`}
+              width={`100%`}
+              header={head()}
+              list={list(member)}
+            />
+            <PagingDiv></PagingDiv>
+          </BoardBox>
+        </Box>
+      </Container>
+      <Modal
+        open={modalOpen}
+        close={closeModal}
+        header={"관리자"}
+        children={modalChildren()}
+      />
+    </>
   );
 };
 
