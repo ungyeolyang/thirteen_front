@@ -16,5 +16,22 @@ const BoardApi = {
   boardList: async (cate) => {
     return await AxiosInstance.get(LOGO + `/blist/${cate}`);
   },
+  boardUpdate: async (bno, title, content) => {
+    const dto = {
+      title: title,
+      content: content,
+      bno: bno,
+    };
+    return await AxiosInstance.post(LOGO + "/bupdate", dto);
+  },
+  boardDelete: async (bno) => {
+    return await AxiosInstance.post(LOGO + `/bdelete/${bno}`);
+  },
+  comeBackUser: async (mid) => {
+    return await AxiosInstance.post(LOGO + `/userback/${mid}`);
+  },
+  getBoardDetail: async (bno) => {
+    return await AxiosInstance.get(LOGO + `/bdetail/${bno}`);
+  },
 };
 export default BoardApi;

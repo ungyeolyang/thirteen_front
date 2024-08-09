@@ -10,7 +10,7 @@ const StyledTable = styled.div`
   /* justify-content: center; */
   flex-direction: column;
 
-  head {
+  .Head {
     display: flex;
     width: 100%;
     height: 10%;
@@ -93,7 +93,7 @@ const Table = (props) => {
       border={props.border}
       button={props.button}
     >
-      <head>{header}</head>
+      <div className="Head">{header}</div>
       <div className="Div">
         <ButtonBox>
           <div className="Button" onClick={btnFun}>

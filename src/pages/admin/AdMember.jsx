@@ -68,19 +68,12 @@ const Head = styled.div`
   justify-content: center;
 `;
 
-const Th = styled.div`
-  background-color: #4aa1e7;
-  color: #fff;
-  padding: 10px;
-  text-align: center;
-  font-size: 1.2rem;
-  /* position: sticky; 스크롤 시 상단에 고정 */
-`;
-
 const Td = styled.td`
   /* padding: 10px; */
   border-bottom: 1px solid #ddd;
   text-align: center;
+  align-items: center;
+  justify-content: center;
   font-size: 1rem;
 `;
 
@@ -128,7 +121,7 @@ const AdMember = () => {
           <Td>{user.social}</Td>
           <Td>{user.image}</Td>
           <Td>
-            <Button backgroundColor={`#4aa1e7`} width={`30%`} height={`60%`}>
+            <Button backgroundColor={`#4aa1e7`} width={`60%`} height={`60%`}>
               버튼
             </Button>
           </Td>
