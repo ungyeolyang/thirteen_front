@@ -11,13 +11,14 @@ import StockSuggestion from "./pages/stocksuggestion/Suggestion";
 import FindPage from "./pages/login/FindPage";
 import AdminPage from "./pages/admin/AdminPage";
 import MyPage from "./pages/my/MyPage";
+import CardPage from "./pages/card/CardMain";
 
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
     box-sizing:border-box;
-    font-family: "Silver";
+    
   }`;
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HeaderFooter />}>
               <Route index element={<Main />} />
+              <Route path="cardpage" element={<CardPage />} />
               <Route path="login" element={<LoginPage />}>
                 <Route index element={<Login />} />
                 <Route path="find" element={<FindPage />} />
