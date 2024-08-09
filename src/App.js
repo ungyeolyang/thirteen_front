@@ -7,7 +7,7 @@ import Login from "./pages/login/Login";
 import LoginPage from "./pages/login/LoginPage";
 import SignupPage from "./pages/login/SignupPage";
 import Main from "./pages/main/Main";
-import Suggestion from "./pages/suggestion/Suggestion";
+import StockSuggestion from "./pages/stocksuggestion/Suggestion";
 import FindPage from "./pages/login/FindPage";
 import AdminPage from "./pages/admin/AdminPage";
 import MyPage from "./pages/my/MyPage";
@@ -35,7 +35,7 @@ function App() {
                 <Route path="signup" element={<SignupPage />} />
               </Route>
               <Route path="my" element={<MyPage />} />
-              <Route path="suggestion" element={<Suggestion />} />
+              <Route path="stocksuggestion" element={<StockSuggestion />} />
               <Route path="admin" element={<AdminPage />} />
             </Route>
           </Routes>
