@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import CardPage from "./CardEx";
 import SearchCard from "./SearchAllCard";
+import CardTop from "./CardTop";
 
 const Container = styled.div`
   width: 100%;
@@ -12,30 +13,14 @@ const Container = styled.div`
   overflow-x: hidden;
   gap: 30px;
 `;
+
 const Second = styled.div`
   width: 100%;
-  height: auto;
-`;
-const SuggestionP = styled.div`
-  width: 100%;
-  margin-top: 15px;
-  font-size: 25px;
-  text-align: center;
-`;
-const SuggestionCard = styled.div`
-  width: 100%;
-  height: 500px;
-
+  height: 600px;
   display: flex;
-  gap: 20px;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-
-  div {
-    width: 300px;
-    height: 350px;
-    background: #ccc;
-  }
 `;
 
 const SearchPage = styled.div`
@@ -48,16 +33,7 @@ const CardMain = () => {
     <Container>
       <CardPage />
       <Second>
-        <SuggestionP>
-          <p>고객의 소비패턴에 따른 카드 추천</p>
-        </SuggestionP>
-        <SuggestionCard>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </SuggestionCard>
+        <CardTop />
       </Second>
       <SearchPage>
         <SearchCard />
@@ -65,4 +41,5 @@ const CardMain = () => {
     </Container>
   );
 };
+
 export default CardMain;

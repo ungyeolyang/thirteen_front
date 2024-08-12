@@ -65,8 +65,8 @@ const Container = styled.div`
   height: 500px;
 `;
 const FileBoxAfter = styled.div`
-  width: 30%;
-  height: 30%;
+  width: 50%;
+  height: 60%;
   background: #ccc;
   display: flex;
   justify-content: center;
@@ -86,7 +86,7 @@ const CellB = styled.div`
   background: #ccc;
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: center;
   flex-direction: column;
 `;
 const FileBox = styled.div`
@@ -110,10 +110,10 @@ const IconWrapper = styled.div`
 `;
 
 const RightBox = styled.div`
-  width: 30%;
+  width: 40%;
   height: 90%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex-direction: column;
   background: #fff;
@@ -135,16 +135,20 @@ const DangerIcon = styled.div`
 `;
 
 const LeftBox = styled.div`
-  width: 40%;
+  width: 50%;
   height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 `;
+const SummerTop = styled.div`
+  width: 100%;
+  height: 50%;
+`;
 
 const SummaryBox = styled.div`
-  width: 90%;
+  width: 100%;
   height: 100%;
   overflow-y: auto; /* 스크롤 가능하도록 설정 */
   display: flex;
@@ -164,7 +168,8 @@ const TotalAmount = styled.h3`
 
 const BarContainer = styled.div`
   background: #fff;
-  width: 400px;
+  width: 50%;
+  min-width: 250px;
   height: 40px;
   margin: 5px 0;
   border-radius: 30px;
@@ -204,19 +209,23 @@ const JobBox = styled.div`
 
 const MoreButton = styled.button`
   margin: 5px 0;
-  width: 70%;
+  width: 60%;
   padding: 10px 0;
   background-color: #c14e4e;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  }
 `;
 
 const FileInputBox = styled.div`
   width: 100%;
   height: 80%;
-  border: 1px dashed #000;
 `;
 const FileInput = styled.input`
   display: none; /* 숨기기 */
@@ -233,7 +242,13 @@ const CustomLabel = styled.label`
   background-color: #007bff;
   color: white;
   border-radius: 5px;
+  border: 2px dashed #fff;
   cursor: pointer;
+  transition: all 0.1s ease-in;
+
+  &:hover {
+    border: 2px solid #fff;
+  }
 `;
 const Fileform = styled.form`
   display: flex;
@@ -251,13 +266,19 @@ const BtnF = styled.div`
   height: 70px;
 `;
 const UploadButton = styled.button`
-  padding: 10px 25px;
+  padding: 10px 0;
+  width: 100%;
   background-color: ${({ disabled }) => (disabled ? "#ccc" : "#C14E4E")};
   color: white;
   border: none;
   margin-top: 5px;
   border-radius: 5px;
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  }
 `;
 
 const CardPage = () => {
@@ -349,9 +370,6 @@ const CardPage = () => {
                     >
                       파일 업로드
                     </UploadButton>
-                    {/* <UploadButton disabled={!file} type="submit">
-                      파일 업로드
-                    </UploadButton> */}
                   </BtnF>
                 </Fileform>
               </FileBox>
@@ -432,29 +450,31 @@ const CardPage = () => {
         ) : (
           <>
             <LeftBox>
-              <SummaryBox>
-                <TotalAmount>
-                  소비내역 총액: {totalAmount.toLocaleString()} 원
-                </TotalAmount>
-                <BarContainer>
-                  {topCategories.map(([category, amount]) => {
-                    const percentage = (amount / totalAmount) * 100;
-                    const color = colors[category] || "#d9d9d9"; // 기본 색상 설정
+              <SummerTop>
+                <SummaryBox>
+                  <TotalAmount>
+                    소비내역 총액: {totalAmount.toLocaleString()} 원
+                  </TotalAmount>
+                  <BarContainer>
+                    {topCategories.map(([category, amount]) => {
+                      const percentage = (amount / totalAmount) * 100;
+                      const color = colors[category] || "#d9d9d9"; // 기본 색상 설정
 
-                    return amount > 0 ? (
-                      <Bar
-                        key={category}
-                        color={color}
-                        width={`${percentage}%`}
-                        style={{ textAlign: "center", borderRadius: "0" }} // 텍스트 중앙 정렬
-                      ></Bar>
-                    ) : null;
-                  })}
-                </BarContainer>
-                <TotalAmount>
-                  소비패턴 : {mostUsedCategory}에 가장 많이 사용하셨습니다
-                </TotalAmount>
-              </SummaryBox>
+                      return amount > 0 ? (
+                        <Bar
+                          key={category}
+                          color={color}
+                          width={`${percentage}%`}
+                          style={{ textAlign: "center", borderRadius: "0" }} // 텍스트 중앙 정렬
+                        ></Bar>
+                      ) : null;
+                    })}
+                  </BarContainer>
+                  <TotalAmount>
+                    소비패턴 : {mostUsedCategory}에 가장 많이 사용하셨습니다
+                  </TotalAmount>
+                </SummaryBox>
+              </SummerTop>
               <FileBoxAfter>
                 <Fileform onSubmit={handleSubmit}>
                   <FileInputBox>
