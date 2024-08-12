@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import Modal from "../../component/Modal";
+import BoardModalContent from "../admin/BoardModalContent";
+import BoardApi from "../../api/BoardAxiosApi";
 
 const Container = styled.div`
   display: flex;
@@ -104,93 +107,132 @@ const TableSection = styled.div`
 `;
 
 const Main = () => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const modalChildren = () => {
+    return (
+      <>
+        <BoardModalContent
+          setTitle={setTitle}
+          setContent={setContent}
+          buttonlist={[{ text: "저장", func: boardSave }]}
+        />
+      </>
+    );
+  };
+
+  const boardSave = async () => {
+    try {
+      const res = await BoardApi.boardSave(title, content, "moun");
+      console.log(res.data);
+      closeModal();
+    } catch (e) {}
+  };
+
+  const openModal = () => {
+    setModalOpen((prev) => !prev);
+    return modalOpen;
+  };
+
+  const closeModal = () => setModalOpen(false);
+
   const navigate = useNavigate();
   const onClickLogout = () => {
     alert("로그아웃 됐습니다");
     localStorage.clear();
   };
   return (
-    <Container>
-      <p
-        onClick={() => {
-          navigate("my");
-        }}
-      >
-        마이페이지입니다.
-      </p>
-      <p onClick={onClickLogout}>로그아웃</p>
-      {/* 첫 번째 페이지: 주식 추천과 카드 추천 */}
-      <FullPageSection bgColor="#f7f7f7">
-        <HalfHeightSection>
-          <SubSection1Box bgColor="#f8f8f8" color="#333">
-            카드 추천
-            <SubSection1></SubSection1>
-          </SubSection1Box>
-        </HalfHeightSection>
-        <HalfHeightSection>
-          <SubSection1Box bgColor="#333" color="#fff">
-            <SubSection1></SubSection1>
-            주식 추천
-          </SubSection1Box>
-        </HalfHeightSection>
-      </FullPageSection>
+    <>
+      <Container>
+        <p
+          onClick={() => {
+            navigate("my");
+          }}
+        >
+          마이페이지입니다.
+        </p>
+        <p onClick={onClickLogout}>로그아웃</p>
+        {/* 첫 번째 페이지: 주식 추천과 카드 추천 */}
+        <FullPageSection bgColor="#f7f7f7">
+          <HalfHeightSection>
+            <SubSection1Box bgColor="#f8f8f8" color="#333">
+              카드 추천
+              <SubSection1></SubSection1>
+            </SubSection1Box>
+          </HalfHeightSection>
+          <HalfHeightSection>
+            <SubSection1Box bgColor="#333" color="#fff">
+              <SubSection1></SubSection1>
+              주식 추천
+            </SubSection1Box>
+          </HalfHeightSection>
+        </FullPageSection>
 
-      {/* 두 번째 페이지: FAQ, 1:1 문의, 공지사항, 푸터 */}
-      <FullPageSection>
-        <HalfHeightSection>
-          <SubSection bgColor="#f8f8f8" color="#333">
-            FAQ
-          </SubSection>
-          <SubSection bgColor="#f8f8f8" color="#333">
-            1:1 문의
-          </SubSection>
-        </HalfHeightSection>
-        <TableSection>
-          공지사항
-          <table>
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>제목</th>
-                <th>글쓴이</th>
-                <th>작성시간</th>
-                <th>조회수</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>10</td>
-                <td>안녕하세요</td>
-                <td>글쓴이 이름</td>
-                <td>20xx/xx/xx</td>
-                <td>11</td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td>안녕하세요</td>
-                <td>글쓴이 이름</td>
-                <td>20xx/xx/xx</td>
-                <td>11</td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td>안녕하세요</td>
-                <td>글쓴이 이름</td>
-                <td>20xx/xx/xx</td>
-                <td>11</td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td>안녕하세요</td>
-                <td>글쓴이 이름</td>
-                <td>20xx/xx/xx</td>
-                <td>11</td>
-              </tr>
-            </tbody>
-          </table>
-        </TableSection>
-      </FullPageSection>
-    </Container>
+        {/* 두 번째 페이지: FAQ, 1:1 문의, 공지사항, 푸터 */}
+        <FullPageSection>
+          <HalfHeightSection>
+            <SubSection bgColor="#f8f8f8" color="#333">
+              FAQ
+            </SubSection>
+            <SubSection bgColor="#f8f8f8" color="#333" onClick={openModal}>
+              1:1 문의
+            </SubSection>
+          </HalfHeightSection>
+          <TableSection>
+            공지사항
+            <table>
+              <thead>
+                <tr>
+                  <th>NO</th>
+                  <th>제목</th>
+                  <th>글쓴이</th>
+                  <th>작성시간</th>
+                  <th>조회수</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10</td>
+                  <td>안녕하세요</td>
+                  <td>글쓴이 이름</td>
+                  <td>20xx/xx/xx</td>
+                  <td>11</td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td>안녕하세요</td>
+                  <td>글쓴이 이름</td>
+                  <td>20xx/xx/xx</td>
+                  <td>11</td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td>안녕하세요</td>
+                  <td>글쓴이 이름</td>
+                  <td>20xx/xx/xx</td>
+                  <td>11</td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td>안녕하세요</td>
+                  <td>글쓴이 이름</td>
+                  <td>20xx/xx/xx</td>
+                  <td>11</td>
+                </tr>
+              </tbody>
+            </table>
+          </TableSection>
+        </FullPageSection>
+      </Container>
+      <Modal
+        open={modalOpen}
+        close={closeModal}
+        header={"자주 묻는 질문 작성"}
+        children={modalChildren()}
+      />
+    </>
   );
 };
 

@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import Table from "../../component/Table";
 import Button from "../../component/Button";
+import { useEffect, useState } from "react";
+import BoardApi from "../../api/BoardAxiosApi";
+import BoardComment from "./BoardComment";
+import Modal from "../../component/Modal";
 
 const Container = styled.div`
   width: 100%;
@@ -47,55 +51,145 @@ const PagingDiv = styled.div`
 `;
 
 const AdMoun = () => {
-  const userEx = [
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      content: "문의 사항",
-    },
-    {
-      name: "Jane Smith",
-      email: "jane@example.com",
-      content: "문의 사항",
-    },
-    {
-      name: "Anna Doe",
-      email: "john@example.com",
-      content: "문의 사항",
-    },
-    {
-      name: "Deric Smith",
-      email: "jane@example.com",
-      content: "문의 사항",
-    },
-    {
-      name: "James Doe",
-      email: "john@example.com",
-      content: "문의 사항",
-    },
-  ];
+  const [mlist, setMList] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  // const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [cno, setCno] = useState();
+  const [board, setBoard] = useState();
+  const [tf, setTF] = useState(false);
+  const [comment, setComment] = useState("");
 
-  const list = (userEx) => {
-    return userEx.map((user, index) => (
-      <Tr key={index}>
-        <Td>{user.name}</Td>
-        <Td>{user.email}</Td>
-        <Td>{user.content}</Td>
-        <Td>
-          <Button backgroundColor={`#4aa1e7`}>버튼</Button>
-        </Td>
-      </Tr>
-    ));
+  useEffect(() => {
+    const getGongJi = async () => {
+      try {
+        const res = await BoardApi.boardList("moun");
+        console.log(res.data);
+
+        setMList(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getGongJi();
+  }, [modalOpen]);
+
+  const openModal = () => {
+    setModalOpen((prev) => !prev);
+    return modalOpen;
+  };
+
+  const closeModal = () => setModalOpen(false);
+
+  const tfCheck = (userTF) => {
+    if (userTF === "TRUE") {
+      setTF(true);
+    } else {
+      setTF(false);
+    }
+  };
+
+  const detailView = async (userbno) => {
+    try {
+      const res = await BoardApi.commetDetail(userbno);
+      const res1 = await BoardApi.getBoardDetail(userbno);
+      setBoard(res1.data);
+      setComment(res.data.comment);
+      setCno(res.data.cno);
+    } catch (e) {}
+  };
+
+  const boardSave = async () => {
+    try {
+      console.log(comment);
+      const res = await BoardApi.commentSave(comment, board.bno);
+      closeModal();
+    } catch (e) {}
+  };
+
+  const boardUpdate = async () => {
+    try {
+      console.log(comment);
+      const res = await BoardApi.cUpdate(comment, board.bno, cno);
+      closeModal();
+    } catch (e) {}
+  };
+
+  const boardDelete = async () => {
+    try {
+      const res = await BoardApi.boardDelete(board.bno);
+      closeModal();
+    } catch (e) {}
+  };
+
+  const list = () => {
+    return (
+      mlist &&
+      mlist.map((user, index) => (
+        <Tr key={index}>
+          <Td>{user.bno}</Td>
+          <Td>{user.title}</Td>
+          <Td>{user.member.nick}</Td>
+          <Td>{user.bdate}</Td>
+          <Td>{user.content}</Td>
+          <Td>{user.tf}</Td>
+          <Td>
+            <Button
+              onClick={() => {
+                detailView(user.bno);
+                // setModalView("detail");
+                tfCheck(user.tf);
+                openModal();
+              }}
+              backgroundColor={`#4aa1e7`}
+            >
+              상세보기
+            </Button>
+          </Td>
+        </Tr>
+      ))
+    );
+  };
+
+  const modalChildren = () => {
+    if (!tf) {
+      return (
+        <BoardComment
+          board={board}
+          comment={comment}
+          setComment={setComment}
+          buttonlist={[{ text: "답변", func: boardSave }]}
+        ></BoardComment>
+      );
+    } else {
+      return (
+        <BoardComment
+          board={board}
+          comment={comment}
+          setComment={setComment}
+          buttonlist={[
+            { text: "수정", func: boardUpdate },
+            { text: "삭제", func: boardDelete },
+          ]}
+        />
+      );
+    }
   };
 
   return (
     <>
       <Container>
         <Box>
-          <Table header={"문의 사항"} list={list(userEx)} border={true}></Table>
+          <Table header={"문의 사항"} list={list()} border={true}></Table>
           <PagingDiv></PagingDiv>
         </Box>
       </Container>
+      <Modal
+        open={modalOpen}
+        close={closeModal}
+        header={"문의사항"}
+        children={modalChildren()}
+      />
     </>
   );
 };

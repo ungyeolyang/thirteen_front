@@ -33,5 +33,29 @@ const BoardApi = {
   getBoardDetail: async (bno) => {
     return await AxiosInstance.get(LOGO + `/bdetail/${bno}`);
   },
+  commetDetail: async (bno) => {
+    return await AxiosInstance.get(LOGO + `/bcomment/${bno}`);
+  },
+  commentSave: async (content, bno) => {
+    const dto = {
+      comment: content,
+      board: {
+        bno: bno,
+      },
+      // nick: nick,
+    };
+    return await AxiosInstance.post(LOGO + `/csave`, dto);
+  },
+  cUpdate: async (content, bno, cno) => {
+    const dto = {
+      comment: content,
+      board: {
+        bno: bno,
+      },
+      // member: { nick: nick },
+      cno: cno,
+    };
+    return await AxiosInstance.post(LOGO + `/cupdate`, dto);
+  },
 };
 export default BoardApi;
