@@ -271,6 +271,7 @@ const CardPage = () => {
   // 파일 선택 핸들러
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
+    console.log("Submit button clicked");
   };
 
   const handleSubmit = async (event) => {
@@ -287,6 +288,7 @@ const CardPage = () => {
     setLoading(true);
 
     try {
+      console.log("Sending request with file:", file);
       const response = await axios.post(
         "http://127.0.0.1:5000/api/upload",
         formData,
@@ -296,10 +298,11 @@ const CardPage = () => {
           },
         }
       );
-
+      console.log("Response received:", response.data);
       setData(response.data);
       setCategoryCounts(response.data.category_totals);
     } catch (error) {
+      console.error("Error occurred:", error.message);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -346,6 +349,9 @@ const CardPage = () => {
                     >
                       파일 업로드
                     </UploadButton>
+                    {/* <UploadButton disabled={!file} type="submit">
+                      파일 업로드
+                    </UploadButton> */}
                   </BtnF>
                 </Fileform>
               </FileBox>
@@ -418,99 +424,109 @@ const CardPage = () => {
   return (
     <Container>
       <Cell>
-        <LeftBox>
-          <SummaryBox>
-            <TotalAmount>
-              소비내역 총액: {totalAmount.toLocaleString()} 원
-            </TotalAmount>
-            <BarContainer>
-              {topCategories.map(([category, amount]) => {
-                const percentage = (amount / totalAmount) * 100;
-                const color = colors[category] || "#d9d9d9"; // 기본 색상 설정
+        {loading ? (
+          <SpinnerContainer>
+            <Spinner />
+            <p>소비 내역 분석 중..</p>
+          </SpinnerContainer>
+        ) : (
+          <>
+            <LeftBox>
+              <SummaryBox>
+                <TotalAmount>
+                  소비내역 총액: {totalAmount.toLocaleString()} 원
+                </TotalAmount>
+                <BarContainer>
+                  {topCategories.map(([category, amount]) => {
+                    const percentage = (amount / totalAmount) * 100;
+                    const color = colors[category] || "#d9d9d9"; // 기본 색상 설정
 
-                return amount > 0 ? (
-                  <Bar
-                    key={category}
-                    color={color}
-                    width={`${percentage}%`}
-                    style={{ textAlign: "center", borderRadius: "0" }} // 텍스트 중앙 정렬
-                  ></Bar>
-                ) : null;
-              })}
-            </BarContainer>
-            <TotalAmount>
-              소비패턴 : {mostUsedCategory}에 가장 많이 사용하셨습니다
-            </TotalAmount>
-          </SummaryBox>
-          <FileBoxAfter>
-            <Fileform onSubmit={handleSubmit}>
-              <FileInputBox>
-                <CustomLabel style={{ fontSize: "20px" }} htmlFor="fileInput">
-                  <RiFileExcelLine
-                    style={{ fontSize: "100px" }}
-                  ></RiFileExcelLine>
-                  {file ? file.name : ""}
-                </CustomLabel>
-                <FileInput
-                  id="fileInput"
-                  type="file"
-                  accept=".xls, .xlsx"
-                  onChange={handleFileChange}
-                />
-              </FileInputBox>
-              <UploadButton disabled={!file} type="submit">
-                파일 업로드
-              </UploadButton>
-            </Fileform>
-          </FileBoxAfter>
-        </LeftBox>
-        <RightBox>
-          <Line>
-            <DangerIcon>
-              <CgDanger />
-            </DangerIcon>
-          </Line>
-          <SummaryBox>
-            <JobBox>
-              {(showAll ? sortedCategories : topCategories).map(
-                ([category, amount]) => {
-                  const percentage = (amount / totalAmount) * 100;
-                  const color = colors[category] || "#d9d9d9"; // 기본 색상 설정
+                    return amount > 0 ? (
+                      <Bar
+                        key={category}
+                        color={color}
+                        width={`${percentage}%`}
+                        style={{ textAlign: "center", borderRadius: "0" }} // 텍스트 중앙 정렬
+                      ></Bar>
+                    ) : null;
+                  })}
+                </BarContainer>
+                <TotalAmount>
+                  소비패턴 : {mostUsedCategory}에 가장 많이 사용하셨습니다
+                </TotalAmount>
+              </SummaryBox>
+              <FileBoxAfter>
+                <Fileform onSubmit={handleSubmit}>
+                  <FileInputBox>
+                    <CustomLabel
+                      style={{ fontSize: "20px" }}
+                      htmlFor="fileInput"
+                    >
+                      <RiFileExcelLine
+                        style={{ fontSize: "100px" }}
+                      ></RiFileExcelLine>
+                      {file ? file.name : ""}
+                    </CustomLabel>
+                    <FileInput
+                      id="fileInput"
+                      type="file"
+                      accept=".xls, .xlsx"
+                      onChange={handleFileChange}
+                    />
+                  </FileInputBox>
+                  <UploadButton disabled={!file} type="submit">
+                    파일 업로드
+                  </UploadButton>
+                </Fileform>
+              </FileBoxAfter>
+            </LeftBox>
+            <RightBox>
+              <Line></Line>
+              <SummaryBox>
+                <JobBox>
+                  {(showAll ? sortedCategories : topCategories).map(
+                    ([category, amount]) => {
+                      const percentage = (amount / totalAmount) * 100;
+                      const color = colors[category] || "#d9d9d9"; // 기본 색상 설정
 
-                  return amount > 0 ? (
-                    <ListItem key={category}>
-                      <BarContainer
-                        style={{
-                          justifyContent: "space-between",
-                          borderRadius: "0",
-                          width: "350px",
-                          height: "50px",
-                          background: "#555",
-                        }}
-                      >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          <IconWrapper color={color}>
-                            {icons[category]}
-                          </IconWrapper>
-                        </div>
+                      return amount > 0 ? (
+                        <ListItem key={category}>
+                          <BarContainer
+                            style={{
+                              justifyContent: "space-between",
+                              borderRadius: "0",
+                              width: "350px",
+                              height: "50px",
+                              background: "#555",
+                            }}
+                          >
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
+                              <IconWrapper color={color}>
+                                {icons[category]}
+                              </IconWrapper>
+                            </div>
 
-                        <Bar>
-                          <span style={{ fontWeight: "bold" }}>
-                            {category} | {amount.toLocaleString()}
-                          </span>
-                        </Bar>
-                        <BarPercent>{percentage.toFixed(2)}%</BarPercent>
-                      </BarContainer>
-                    </ListItem>
-                  ) : null;
-                }
-              )}
-              <MoreButton onClick={() => setShowAll(!showAll)}>
-                {showAll ? "상위 5개만 보기" : "상세 보기"}
-              </MoreButton>
-            </JobBox>
-          </SummaryBox>
-        </RightBox>
+                            <Bar>
+                              <span style={{ fontWeight: "bold" }}>
+                                {category} | {amount.toLocaleString()}
+                              </span>
+                            </Bar>
+                            <BarPercent>{percentage.toFixed(2)}%</BarPercent>
+                          </BarContainer>
+                        </ListItem>
+                      ) : null;
+                    }
+                  )}
+                  <MoreButton onClick={() => setShowAll(!showAll)}>
+                    {showAll ? "상위 5개만 보기" : "상세 보기"}
+                  </MoreButton>
+                </JobBox>
+              </SummaryBox>
+            </RightBox>
+          </>
+        )}
       </Cell>
     </Container>
   );

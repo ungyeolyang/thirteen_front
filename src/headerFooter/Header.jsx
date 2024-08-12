@@ -45,7 +45,7 @@ const Header = () => {
       <StyledHeader>
         <Div onClick={() => navigate("/")}>로고</Div>
         <Div onClick={() => navigate("/login")}>로그인</Div>
-        <Div onClick={() => navigate("/suggestion")}>카드 추천</Div>
+        <Div onClick={() => navigate("/cardpage")}>카드 추천</Div>
         <Div onClick={() => navigate("/stocksuggestion")}>주식 추천</Div>
       </StyledHeader>
     </>

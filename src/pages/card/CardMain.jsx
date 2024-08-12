@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import CardPage from "./CardEx";
+import SearchCard from "./SearchAllCard";
 
 const Container = styled.div`
   width: 100%;
@@ -37,6 +38,11 @@ const SuggestionCard = styled.div`
   }
 `;
 
+const SearchPage = styled.div`
+  width: 100%;
+  height: 300px;
+`;
+
 const CardMain = () => {
   return (
     <Container>
@@ -53,6 +59,9 @@ const CardMain = () => {
           <div></div>
         </SuggestionCard>
       </Second>
+      <SearchPage>
+        <SearchCard />
+      </SearchPage>
     </Container>
   );
 };
