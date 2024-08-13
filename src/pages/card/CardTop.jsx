@@ -59,7 +59,6 @@ const Front = styled.div`
   cursor: pointer;
   width: 100%;
   height: 100%;
-
   background-image: url(${CardImg});
   background-size: contain;
   background-repeat: no-repeat;
@@ -68,6 +67,7 @@ const Front = styled.div`
   backface-visibility: hidden;
   display: flex;
   justify-content: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   align-items: center;
 `;
 
@@ -84,6 +84,7 @@ const Back = styled.div`
   justify-content: space-evenly;
   align-items: center;
   transform: rotateY(180deg);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 `;
 const LineB = styled.div`
   width: 15%;
@@ -95,11 +96,6 @@ const Text = styled.div`
   width: 60%;
   display: flex;
   flex-direction: column;
-`;
-
-const SearchPage = styled.div`
-  width: 100%;
-  height: 300px;
 `;
 
 const CardTop = () => {

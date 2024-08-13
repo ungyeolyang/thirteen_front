@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Modal from "./StockModal"; // 모달 컴포넌트 임포트
+import axios from "axios";
 
 // 전체 페이지 컨테이너
 const Container = styled.div`
@@ -249,6 +250,39 @@ const TableCell = styled.td`
 const StockSuggestion = () => {
   const [isModal1Open, setModal1Open] = useState(false);
   const [isModal2Open, setModal2Open] = useState(false);
+  const [inputStock, setInputStock] = useState("");
+  const [searchStocks, setSearchStocks] = useState([]);
+
+  const getStocksName = async () => {
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:5000/api/stock?query=${inputStock}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Response received:", res.data);
+      setSearchStocks(res.data);
+    } catch (error) {
+      console.error("Error occurred:", error.message);
+    }
+  };
+  const onKeyDownEnter = (e) => {
+    if (e.key === "Enter") {
+      getStocksName();
+    }
+  };
+  const substring = (props) => {
+    const tickerMatch = props.match(/\(([^)]+)\)/);
+    if (tickerMatch && tickerMatch[1]) {
+      const tickerNumber = tickerMatch[1];
+      console.log(tickerNumber);
+    } else {
+      console.log("Ticker number not found");
+    }
+  };
 
   return (
     <Container>
@@ -266,8 +300,12 @@ const StockSuggestion = () => {
       </PredictionContainer>
       <SearchContainer>
         <SearchInputContainer>
-          <SearchInput placeholder="주식명을 입력하세요..." />
-          <SearchButton>
+          <SearchInput
+            placeholder="주식명을 입력하세요..."
+            onChange={(e) => setInputStock(e.target.value)}
+            onKeyDown={(e) => onKeyDownEnter(e)}
+          />
+          <SearchButton onClick={getStocksName}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -286,16 +324,12 @@ const StockSuggestion = () => {
           </SearchButton>
         </SearchInputContainer>
         <SearchResultContainer>
-          <SearchResultItem>삼성전자 (005930)</SearchResultItem>
-          <SearchResultItem>삼성바이오로직스 (207940)</SearchResultItem>
-          <SearchResultItem>삼성전자우 (005935)</SearchResultItem>
-          <SearchResultItem>삼성SDI (006400)</SearchResultItem>
-          <SearchResultItem>삼성물산 (028260)</SearchResultItem>
-          <SearchResultItem>삼성생명 (032830)</SearchResultItem>
-          <SearchResultItem>삼성전기 (009150)</SearchResultItem>
-          <SearchResultItem>삼성에스디에스 (018260)</SearchResultItem>
-          <SearchResultItem>삼성화재 (000810)</SearchResultItem>
-          <SearchResultItem>삼성중공업 (010140)</SearchResultItem>
+          {searchStocks &&
+            searchStocks.map((stock) => (
+              <SearchResultItem onClick={() => substring(stock.company)}>
+                {stock.company}
+              </SearchResultItem>
+            ))}
         </SearchResultContainer>
       </SearchContainer>
 

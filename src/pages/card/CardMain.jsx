@@ -2,6 +2,8 @@ import styled from "styled-components";
 import CardPage from "./CardEx";
 import SearchCard from "./SearchAllCard";
 import CardTop from "./CardTop";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Container = styled.div`
   width: 100%;
@@ -25,7 +27,7 @@ const Second = styled.div`
 
 const SearchPage = styled.div`
   width: 100%;
-  height: 300px;
+  height: auto;
 `;
 
 const CardMain = () => {
