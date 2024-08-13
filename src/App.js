@@ -12,6 +12,7 @@ import FindPage from "./pages/login/FindPage";
 import AdminPage from "./pages/admin/AdminPage";
 import MyPage from "./pages/my/MyPage";
 import CardPage from "./pages/card/CardMain";
+import Flask from "./pages/stocksuggestion/Flask";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -39,6 +40,7 @@ function App() {
               <Route path="my" element={<MyPage />} />
               <Route path="stocksuggestion" element={<StockSuggestion />} />
               <Route path="admin" element={<AdminPage />} />
+              <Route path="Flask" element={<Flask />} />
             </Route>
           </Routes>
         </Router>
