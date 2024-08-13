@@ -48,6 +48,22 @@ const PagingDiv = styled.div`
   height: 10%;
   background-color: #fff;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2%;
+`;
+
+const PageBtn = styled.div`
+  width: 40px;
+  height: 40px;
+  background-color: #4aa1e7;
+  cursor: pointer;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
 `;
 
 const AdFAQ = () => {
@@ -57,20 +73,21 @@ const AdFAQ = () => {
   const [bno, setBno] = useState();
   const [faqList, setFaqList] = useState([]);
   const [modalView, setModalView] = useState("");
+  const [page, setPage] = useState(0);
+  const [pageCnt, setPageCnt] = useState([]);
 
   useEffect(() => {
     const getGongJi = async () => {
       try {
-        const res = await BoardApi.boardList("faq");
-        console.log(res.data);
-
-        setFaqList(res.data);
+        const res = await BoardApi.boardList("faq", page);
+        setPageCnt(res.data.page);
+        setFaqList(res.data.board);
       } catch (e) {
         console.log(e);
       }
     };
     getGongJi();
-  }, [modalOpen]);
+  }, [modalOpen, page]);
 
   const openModal = () => {
     setModalOpen((prev) => !prev);
@@ -82,7 +99,6 @@ const AdFAQ = () => {
   const faqSave = async () => {
     try {
       const res = await BoardApi.boardSave(title, content, "faq");
-      console.log(res.data);
       closeModal();
     } catch (e) {}
   };
@@ -213,7 +229,13 @@ const AdFAQ = () => {
               setModalView("save");
             }}
           ></Table>
-          <PagingDiv></PagingDiv>
+          <PagingDiv>
+            {Array.from({ length: pageCnt }, (_, index) => (
+              <PageBtn onClick={() => setPage(index)} key={index}>
+                {index + 1}
+              </PageBtn>
+            ))}
+          </PagingDiv>
         </Box>
       </Container>
       <Modal

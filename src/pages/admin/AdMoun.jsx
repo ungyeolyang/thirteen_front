@@ -48,6 +48,22 @@ const PagingDiv = styled.div`
   height: 10%;
   background-color: #fff;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2%;
+`;
+
+const PageBtn = styled.div`
+  width: 40px;
+  height: 40px;
+  background-color: #4aa1e7;
+  cursor: pointer;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
 `;
 
 const AdMoun = () => {
@@ -59,20 +75,22 @@ const AdMoun = () => {
   const [board, setBoard] = useState();
   const [tf, setTF] = useState(false);
   const [comment, setComment] = useState("");
+  const [page, setPage] = useState(0);
+  const [pageCnt, setPageCnt] = useState([]);
 
   useEffect(() => {
     const getGongJi = async () => {
       try {
-        const res = await BoardApi.boardList("moun");
-        console.log(res.data);
+        const res = await BoardApi.boardList("moun", page);
 
-        setMList(res.data);
+        setMList(res.data.board);
+        setPageCnt(res.data.page);
       } catch (e) {
         console.log(e);
       }
     };
     getGongJi();
-  }, [modalOpen]);
+  }, [modalOpen, page]);
 
   const openModal = () => {
     setModalOpen((prev) => !prev);
@@ -101,7 +119,6 @@ const AdMoun = () => {
 
   const boardSave = async () => {
     try {
-      console.log(comment);
       const res = await BoardApi.commentSave(comment, board.bno);
       closeModal();
     } catch (e) {}
@@ -109,7 +126,6 @@ const AdMoun = () => {
 
   const boardUpdate = async () => {
     try {
-      console.log(comment);
       const res = await BoardApi.cUpdate(comment, board.bno, cno);
       closeModal();
     } catch (e) {}
@@ -181,7 +197,13 @@ const AdMoun = () => {
       <Container>
         <Box>
           <Table header={"문의 사항"} list={list()} border={true}></Table>
-          <PagingDiv></PagingDiv>
+          <PagingDiv>
+            {Array.from({ length: pageCnt }, (_, index) => (
+              <PageBtn onClick={() => setPage(index)} key={index}>
+                {index + 1}
+              </PageBtn>
+            ))}
+          </PagingDiv>
         </Box>
       </Container>
       <Modal

@@ -48,6 +48,22 @@ const PagingDiv = styled.div`
   height: 10%;
   background-color: #fff;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2%;
+`;
+
+const PageBtn = styled.div`
+  width: 40px;
+  height: 40px;
+  background-color: #4aa1e7;
+  cursor: pointer;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
 `;
 
 const AdGong = () => {
@@ -57,18 +73,21 @@ const AdGong = () => {
   const [bno, setBno] = useState();
   const [gongList, setGongList] = useState([]);
   const [modalView, setModalView] = useState("");
+  const [page, setPage] = useState(0);
+  const [pageCnt, setPageCnt] = useState([]);
 
   useEffect(() => {
     const getGongJi = async () => {
       try {
-        const res = await BoardApi.boardList("gong");
-        setGongList(res.data);
+        const res = await BoardApi.boardList("gong", page);
+        setGongList(res.data.board);
+        setPageCnt(res.data.page);
       } catch (e) {
         console.log(e);
       }
     };
     getGongJi();
-  }, [modalOpen]);
+  }, [modalOpen, page]);
 
   const gongSave = async () => {
     try {
@@ -225,7 +244,13 @@ const AdGong = () => {
               setModalView("save");
             }}
           ></Table>
-          <PagingDiv></PagingDiv>
+          <PagingDiv>
+            {Array.from({ length: pageCnt }, (_, index) => (
+              <PageBtn onClick={() => setPage(index)} key={index}>
+                {index + 1}
+              </PageBtn>
+            ))}
+          </PagingDiv>
         </Box>
       </Container>
       <Modal

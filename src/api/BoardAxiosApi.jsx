@@ -2,8 +2,8 @@ import AxiosInstance from "./AxiosInstance";
 
 const LOGO = "/board";
 const BoardApi = {
-  alluser: async () => {
-    return await AxiosInstance.get(LOGO + "/alluser");
+  alluser: async (page) => {
+    return await AxiosInstance.get(LOGO + `/alluser/${page}`);
   },
   boardSave: async (title, content, cate) => {
     const dto = {
@@ -13,8 +13,8 @@ const BoardApi = {
     };
     return await AxiosInstance.post(LOGO + "/bsave", dto);
   },
-  boardList: async (cate) => {
-    return await AxiosInstance.get(LOGO + `/blist/${cate}`);
+  boardList: async (cate, page) => {
+    return await AxiosInstance.get(LOGO + `/blist/${cate}/${page}`);
   },
   boardUpdate: async (bno, title, content) => {
     const dto = {

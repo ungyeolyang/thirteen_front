@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import BoardApi from "../../api/BoardAxiosApi";
 import BoardModalContent from "./BoardModalContent";
 import Modal from "../../component/Modal";
+import AdGraph from "./AdGraph";
 
 const Container = styled.div`
   width: 100%;
@@ -95,6 +96,22 @@ const PagingDiv = styled.div`
   height: 10%;
   background-color: #fff;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2%;
+`;
+
+const PageBtn = styled.div`
+  width: 40px;
+  height: 40px;
+  background-color: #4aa1e7;
+  cursor: pointer;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
 `;
 
 const AdMember = () => {
@@ -102,6 +119,8 @@ const AdMember = () => {
   const [id, setID] = useState([]);
   const [tf, setTF] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [page, setPage] = useState(0);
+  const [pageCnt, setPageCnt] = useState([]);
 
   const openModal = () => {
     setModalOpen((prev) => !prev);
@@ -117,14 +136,17 @@ const AdMember = () => {
   useEffect(() => {
     const getAlluser = async () => {
       try {
-        const res = await BoardApi.alluser();
+        const res = await BoardApi.alluser(page);
+        console.log(res.data.user);
+
         if (res.data) {
-          setMember(res.data);
+          setMember(res.data.user);
+          setPageCnt(res.data.page);
         }
       } catch (e) {}
     };
     getAlluser();
-  }, [modalOpen]);
+  }, [modalOpen, page]);
 
   const userComeOrBye = async () => {
     try {
@@ -210,7 +232,9 @@ const AdMember = () => {
       <Container>
         <Box>
           <ChartBox>
-            <Graph></Graph>
+            <Graph>
+              <AdGraph data={member} />
+            </Graph>
             <Donut></Donut>
           </ChartBox>
           <BoardBox>
@@ -220,7 +244,13 @@ const AdMember = () => {
               header={head()}
               list={list(member)}
             />
-            <PagingDiv></PagingDiv>
+            <PagingDiv>
+              {Array.from({ length: pageCnt }, (_, index) => (
+                <PageBtn onClick={() => setPage(index)} key={index}>
+                  {index + 1}
+                </PageBtn>
+              ))}
+            </PagingDiv>
           </BoardBox>
         </Box>
       </Container>
