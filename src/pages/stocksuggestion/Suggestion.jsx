@@ -2,6 +2,28 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Modal from "./StockModal"; // 모달 컴포넌트 임포트
 import axios from "axios";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Chart.js에 필요한 모듈 등록
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 // 전체 페이지 컨테이너
 const Container = styled.div`
@@ -107,6 +129,11 @@ const SearchInputContainer = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 어두운 그림자 */
 `;
 
+const Form = styled.form`
+  width: 100%;
+  display: flex;
+`;
+
 const SearchInput = styled.input`
   width: 100%;
   padding: 10px;
@@ -195,6 +222,8 @@ const ChartContainer = styled.div`
   border-radius: 15px;
   padding: 20px;
   border: 2px solid #007bff; /* 파란색 테두리 */
+  width: 100%;
+  max-width: 600px; /* 차트 크기 조정 */
 `;
 
 // 버튼 컨테이너
@@ -205,7 +234,7 @@ const ButtonContainer = styled.div`
 `;
 
 // 개별 버튼 스타일
-const PredictionButton = styled.button`
+const PredictionButton = styled.li`
   background-color: #e0e0e0;
   border: none;
   border-radius: 10px;
@@ -252,6 +281,42 @@ const StockSuggestion = () => {
   const [isModal2Open, setModal2Open] = useState(false);
   const [inputStock, setInputStock] = useState("");
   const [searchStocks, setSearchStocks] = useState([]);
+  const [price, setPrice] = useState("");
+  const [stockName, setStockName] = useState(""); // 주식 이름을 입력받기 위한 state 추가
+  const [results, setResults] = useState(null);
+  const [predictedPrices, setPredictedPrices] = useState([]); // 예측된 주가를 저장할 state 추가
+  const [latestPrice, setLatestPrice] = useState(null); // 금일 종가를 저장할 state 추가
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000/Flask", {
+        price,
+      });
+      setResults(response.data);
+      setError(null);
+    } catch (err) {
+      setError(err.response?.data?.error || "오류가 발생했습니다.");
+      setResults(null);
+    }
+  };
+
+  const handlePredictStock = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000/predict_stock", {
+        stock_name: stockName, // 입력된 주식명으로 Flask 서버에 요청
+      });
+      setPredictedPrices(response.data.predicted_prices); // 예측된 주가를 state에 저장
+      setLatestPrice(response.data.latest_price);
+      setError(null);
+    } catch (err) {
+      setError(err.response?.data?.error || "오류가 발생했습니다.");
+      setPredictedPrices(null);
+    }
+    setModal1Open(true);
+  };
 
   const getStocksName = async () => {
     try {
@@ -284,45 +349,108 @@ const StockSuggestion = () => {
     }
   };
 
+  const chartData = {
+    labels: ["금일", "1일 후", "2일 후", "3일 후"],
+    datasets: [
+      {
+        label: `${stockName} 예측 주가`,
+        data: [latestPrice, ...predictedPrices],
+        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        fill: false,
+        tension: 0.1,
+      },
+    ],
+  };
+  const chartOptions = {
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+    },
+  };
+
   return (
     <Container>
       <PredictionContainer>
         <PredictionTextBox>
           <h2>회원 예상 환급액: ???,??? 원</h2>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="price">가격 입력:</label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              required
+            />
+            <button type="submit">검색</button>
+          </form>
           <h4>
             회원님의 예상 환급액으로 구매할 수 있는 주식 Best를 추천해드립니다!
           </h4>
         </PredictionTextBox>
+        <div id="results">
+          {error && <p>{error}</p>}
+          {results && (
+            <>
+              <h2>추천 주식:</h2>
+              {results.length === 0 ? (
+                <p>추천 종목이 없습니다.</p>
+              ) : (
+                <ul>
+                  {results.map((stock, index) => (
+                    <li key={index}>
+                      <strong>{stock.ticker}</strong>
+                      <br />
+                      최신 종가: {stock.latest_price}
+                      <br />
+                      예측 가격: {stock.predicted_price}
+                      <br />
+                      등락률: {stock.change_rate.toFixed(2)}%
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+        </div>
         <StockChartBox>
           <StockChart1></StockChart1>
           <StockChart2></StockChart2>
         </StockChartBox>
       </PredictionContainer>
       <SearchContainer>
-        <SearchInputContainer>
-          <SearchInput
-            placeholder="주식명을 입력하세요..."
-            onChange={(e) => setInputStock(e.target.value)}
-            onKeyDown={(e) => onKeyDownEnter(e)}
-          />
-          <SearchButton onClick={getStocksName}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              width="24"
-              height="24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 18l6-6m0 0l-6-6m6 6H4"
-              />
-            </svg>
-          </SearchButton>
-        </SearchInputContainer>
+        <Form onSubmit={handlePredictStock}>
+          <SearchInputContainer>
+            <SearchInput
+              placeholder="주식명을 입력하세요..."
+              onChange={(e) => setStockName(e.target.value)} // stockName 상태를 업데이트
+              onKeyDown={(e) => onKeyDownEnter(e)}
+              type="text"
+              value={stockName} // stockName 상태를 input 값으로 설정
+              required
+            />
+            <SearchButton type="submit">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                width="24"
+                height="24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 18l6-6m0 0l-6-6m6 6H4"
+                />
+              </svg>
+            </SearchButton>
+          </SearchInputContainer>
+        </Form>
         <SearchResultContainer>
           {searchStocks &&
             searchStocks.map((stock) => (
@@ -342,64 +470,69 @@ const StockSuggestion = () => {
         </OpenModalButton>
       </Footer>
 
-      <Modal
-        isOpen={isModal1Open}
-        onClose={() => setModal1Open(false)}
-        title="모달 1"
-      >
-        {/* 모달 1 콘텐츠 */}
-        <ChartContainer>
-          {/* 차트가 들어갈 위치입니다. 차트를 제외하고 레이아웃만 표시합니다. */}
-        </ChartContainer>
-        <ButtonContainer>
-          <PredictionButton>1일후 1.89%</PredictionButton>
-          <PredictionButton>2일후 4.9%</PredictionButton>
-          <PredictionButton>3일후 2.7%</PredictionButton>
-        </ButtonContainer>
-      </Modal>
+      {predictedPrices && (
+        <Modal isOpen={isModal1Open} onClose={() => setModal1Open(false)}>
+          <h2>{stockName}의 3일 예측 주가</h2>
+          <ChartContainer>
+            {predictedPrices && latestPrice && (
+              <Line data={chartData} options={chartOptions} />
+            )}
+          </ChartContainer>
+          <ButtonContainer>
+            {predictedPrices.map((price, index) => (
+              <li key={index}>
+                {index + 1}일 후: {price.toFixed(2)}{" "}
+              </li>
+            ))}
+          </ButtonContainer>
+        </Modal>
+      )}
+      {predictedPrices && (
+        <Modal isOpen={isModal2Open} onClose={() => setModal2Open(false)}>
+          {/* 모달 2 콘텐츠 */}
+          <TableContainer>
+            <h2>{stockName}의 3일 예측 주가</h2>
+            <Table>
+              <thead>
+                <tr>
+                  <TableHeader>Day</TableHeader>
+                  <TableHeader>종가</TableHeader>
+                  <TableHeader>전일대비</TableHeader>
+                  <TableHeader>등락률</TableHeader>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <TableCell>금일</TableCell>
+                  <TableCell>{latestPrice}</TableCell>
+                  <TableCell>-</TableCell>{" "}
+                  {/* 금일은 전일이 없으므로 '-' 처리 */}
+                  <TableCell>-</TableCell>{" "}
+                  {/* 금일은 전일이 없으므로 '-' 처리 */}
+                </tr>
+                {predictedPrices.map((price, index) => {
+                  const previousPrice =
+                    index === 0 ? latestPrice : predictedPrices[index - 1];
+                  const priceDifference = price - previousPrice;
+                  const changeRate = (
+                    (priceDifference / previousPrice) *
+                    100
+                  ).toFixed(2);
 
-      <Modal isOpen={isModal2Open} onClose={() => setModal2Open(false)}>
-        {/* 모달 2 콘텐츠 */}
-        <TableContainer>
-          <h2>주가 예측</h2>
-          <Table>
-            <thead>
-              <tr>
-                <TableHeader>날짜</TableHeader>
-                <TableHeader>종가</TableHeader>
-                <TableHeader>전일대비</TableHeader>
-                <TableHeader>등락률</TableHeader>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <TableCell>금일</TableCell>
-                <TableCell>0000</TableCell>
-                <TableCell>-800</TableCell>
-                <TableCell>0.0%</TableCell>
-              </tr>
-              <tr>
-                <TableCell>1일후</TableCell>
-                <TableCell>0000</TableCell>
-                <TableCell>-800</TableCell>
-                <TableCell>0.0%</TableCell>
-              </tr>
-              <tr>
-                <TableCell>2일후</TableCell>
-                <TableCell>0000</TableCell>
-                <TableCell>-800</TableCell>
-                <TableCell>0.0%</TableCell>
-              </tr>
-              <tr>
-                <TableCell>3일후</TableCell>
-                <TableCell>0000</TableCell>
-                <TableCell>-800</TableCell>
-                <TableCell>0.0%</TableCell>
-              </tr>
-            </tbody>
-          </Table>
-        </TableContainer>
-      </Modal>
+                  return (
+                    <tr key={index}>
+                      <TableCell>{index + 1}일 후</TableCell>
+                      <TableCell>{price.toFixed(0)}</TableCell>
+                      <TableCell>{priceDifference.toFixed(0)}</TableCell>
+                      <TableCell>{changeRate}%</TableCell>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </TableContainer>
+        </Modal>
+      )}
     </Container>
   );
 };

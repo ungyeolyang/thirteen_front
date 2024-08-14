@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Flask = () => {
@@ -6,18 +6,19 @@ const Flask = () => {
   const [stockName, setStockName] = useState(""); // 주식 이름을 입력받기 위한 state 추가
   const [results, setResults] = useState(null);
   const [predictedPrices, setPredictedPrices] = useState(null); // 예측된 주가를 저장할 state 추가
+  const [latestPrice, setLatestPrice] = useState(null); // 금일 종가를 저장할 state 추가
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/Flask", {
+      const rsp = await axios.post("http://localhost:5000/Flask", {
         price,
       });
-      setResults(response.data);
+      setResults(rsp.data);
       setError(null);
     } catch (err) {
-      setError(err.response?.data?.error || "오류가 발생했습니다.");
+      setError(err.rsp?.data?.error || "오류가 발생했습니다.");
       setResults(null);
     }
   };
@@ -29,6 +30,7 @@ const Flask = () => {
         stock_name: stockName, // 입력된 주식명으로 Flask 서버에 요청
       });
       setPredictedPrices(response.data.predicted_prices); // 예측된 주가를 state에 저장
+      setLatestPrice(response.data.latest_price);
       setError(null);
     } catch (err) {
       setError(err.response?.data?.error || "오류가 발생했습니다.");
@@ -94,6 +96,9 @@ const Flask = () => {
           <>
             <h2>{stockName}의 3일 예측 주가:</h2>
             <ul>
+              {latestPrice !== null && (
+                <li>금일 종가: {latestPrice.toFixed(2)}</li>
+              )}
               {predictedPrices.map((price, index) => (
                 <li key={index}>
                   Day {index + 1}: {price.toFixed(2)}{" "}
