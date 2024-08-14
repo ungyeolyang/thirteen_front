@@ -1,38 +1,103 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { FaCircleUser } from "react-icons/fa6";
 
 const StyledHeader = styled.div`
   position: relative;
   display: flex;
-  background: black;
   align-items: center;
-  overflow: hidden;
-  justify-content: center;
-  z-index: 9;
-  gap: 5%;
-  font-size: 30px;
+  justify-content: space-evenly;
   width: 100%;
-  height: 12vh;
+  height: 20vh;
 `;
 
-const Div = styled.div`
-  color: #fff;
+const HeadBox = styled.div`
+  width: 90%;
+  height: 70%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Logo = styled.div`
+  color: #000;
   cursor: pointer;
+  width: 15%;
   height: 100%;
   display: flex;
-  padding-top: 10px;
+  background: #ccc;
   align-items: center;
   justify-content: center;
+  border: 1px solid #000;
+`;
+
+const MyBox = styled.div`
+  color: #858585;
+  position: fixed;
+  top: 2%;
+  right: 1%;
+  cursor: pointer;
+  width: 200px;
+  border-radius: 30px;
+  height: 100px;
+  font-size: 80px;
+  background: #fff;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
   &:hover {
     color: #000;
     font-weight: bold;
   }
+
+  &:hover > div {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(15px);
+  }
+`;
+
+const DivBox = styled.div`
+  width: 100%;
+  height: 300px;
+  visibility: hidden;
+  opacity: 0;
+  border-radius: 30px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5%;
+  transform: translateY(-20px);
+  transition: all 0.3s ease;
+  position: absolute;
+  font-size: 30px;
+  top: 50%;
+`;
+
+const Div = styled.div`
+  width: 100%;
+  height: 100px;
+  background: #ccc;
+  display: flex;
+  border-radius: 20px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 `;
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const onClickLogout = () => {
+    alert("로그아웃 됐습니다");
+    localStorage.clear();
+  };
+
   if (
     location.pathname.includes("/login") ||
     location.pathname.includes("/admin")
@@ -43,10 +108,16 @@ const Header = () => {
   return (
     <>
       <StyledHeader>
-        <Div onClick={() => navigate("/")}>로고</Div>
-        <Div onClick={() => navigate("/login")}>로그인</Div>
-        <Div onClick={() => navigate("/cardpage")}>카드 추천</Div>
-        <Div onClick={() => navigate("/stocksuggestion")}>주식 추천</Div>
+        <HeadBox>
+          <Logo onClick={() => navigate("/")}>로고</Logo>
+          <MyBox>
+            <FaCircleUser onClick={() => navigate("/my")} />
+            <DivBox>
+              <Div onClick={() => navigate("/login")}>로그인</Div>
+              <Div onClick={onClickLogout}>로그아웃</Div>
+            </DivBox>
+          </MyBox>
+        </HeadBox>
       </StyledHeader>
     </>
   );
