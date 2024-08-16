@@ -186,10 +186,10 @@ const CardImage = styled.img`
   transition: transform 0.3s ease;
 `;
 
-const SearchCard = () => {
+const SearchCard = ({ setSelectedCard }) => {
   const [searchCards, setSearchCards] = useState([]);
+  const [inputSearch, setInputSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCard, setSelectedCard] = useState(null); // 모달 상태 추가
   const cardsPerPage = 16;
 
   const rpad = (str, length, padString) => {
@@ -206,21 +206,21 @@ const SearchCard = () => {
     const getCard = async () => {
       try {
         const res = await axios.get(
-          `http://127.0.0.1:5000/api/card?query=${""}`,
+          `http://127.0.0.1:5000/api/card?query=${inputSearch}`,
           {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           }
         );
-        console.log("Response received:", res.data);
+        // console.log("Response received:", res.data);
         setSearchCards(res.data);
       } catch (error) {
         console.error("Error occurred:", error.message);
       }
     };
     getCard();
-  }, []);
+  }, [inputSearch]);
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
@@ -256,6 +256,13 @@ const SearchCard = () => {
 
   return (
     <Container>
+      <input
+        placeholder="검색"
+        onChange={(e) => {
+          setInputSearch(e.target.value);
+          setCurrentPage(1);
+        }}
+      />
       <Cardbox>
         {currentCards.map((card, index) => (
           <Card key={index}>
@@ -300,9 +307,6 @@ const SearchCard = () => {
           Next
         </PageButton>
       </Pagination>
-      {selectedCard && (
-        <CardModal card={selectedCard} onClose={() => setSelectedCard(null)} />
-      )}
     </Container>
   );
 };

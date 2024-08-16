@@ -93,12 +93,6 @@ const CardModal = ({ card, onClose }) => {
   const imgRef = useRef(null);
   const [rotate, setRotate] = useState(0);
 
-  const rpad = (str, length, padString) => {
-    while (str.length < length) {
-      str += padString;
-    }
-    return str;
-  };
   useEffect(() => {
     const img = imgRef.current;
 
@@ -124,9 +118,21 @@ const CardModal = ({ card, onClose }) => {
           </CardImg>
           <ModalText>
             <h2>{card.cname}</h2>
-            <p>연회비: {card.annualfee}</p>
-            <p>{card.performance}</p>
-            <p>{card.benefits}</p>
+            <p>연회비 : {card.annualfee}</p>
+            <p>기준실적 : {card.performance}</p>
+            <p>
+              {card.benefits
+                .replace(/,/g, " ") // 쉼표 제거
+                .split(")") // ')' 기호로 문자열 분할
+                .filter(Boolean) // 빈 문자열 제거
+                .map((benefit, index) => (
+                  <span key={index}>
+                    {benefit.trim()}
+                    {index < card.benefits.split(")").length - 1 && <br />}{" "}
+                    {/* 마지막 항목에는 줄바꿈을 적용하지 않음 */}
+                  </span>
+                ))}
+            </p>
           </ModalText>
         </CardBox>
       </ModalContent>

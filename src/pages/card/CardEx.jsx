@@ -281,13 +281,11 @@ const UploadButton = styled.button`
   }
 `;
 
-const CardPage = () => {
-  const [data, setData] = useState(null);
+const CardPage = ({ data, setData, loading, setLoading, setCategory }) => {
   const [error, setError] = useState(null);
   const [showAll, setShowAll] = useState(false);
   const [categoryCounts, setCategoryCounts] = useState({});
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   // 파일 선택 핸들러
   const handleFileChange = (event) => {
@@ -329,6 +327,18 @@ const CardPage = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (data && data.category_totals) {
+      const filteredTopCategories = Object.entries(data.category_totals)
+        .filter(([category]) => category !== "기타")
+        .slice(0, 5)
+        .map(([category]) => category)
+        .join(",");
+
+      setCategory(filteredTopCategories);
+    }
+  }, [data]);
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -437,7 +447,9 @@ const CardPage = () => {
 
   const [mostUsedCategory] = sortedCategories[0] || ["없음", 0];
 
-  const topCategories = sortedCategories.slice(0, 5);
+  const topCategories = sortedCategories
+    .filter((category) => category[0] !== "기타")
+    .slice(0, 5);
 
   return (
     <Container>
@@ -508,7 +520,6 @@ const CardPage = () => {
                     ([category, amount]) => {
                       const percentage = (amount / totalAmount) * 100;
                       const color = colors[category] || "#d9d9d9"; // 기본 색상 설정
-
                       return amount > 0 ? (
                         <ListItem key={category}>
                           <BarContainer

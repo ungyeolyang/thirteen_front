@@ -4,6 +4,7 @@ import SearchCard from "./SearchAllCard";
 import CardTop from "./CardTop";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import CardModal from "./CardModal";
 
 const Container = styled.div`
   width: 100%;
@@ -31,15 +32,32 @@ const SearchPage = styled.div`
 `;
 
 const CardMain = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState("");
+  const [selectedCard, setSelectedCard] = useState(null); // 모달 상태 추가
+
   return (
     <Container>
-      <CardPage />
-      <Second>
-        <CardTop />
-      </Second>
+      <CardPage
+        category={category}
+        setCategory={setCategory}
+        setLoading={setLoading}
+        loading={loading}
+        data={data}
+        setData={setData}
+      />
+      {data && (
+        <Second>
+          <CardTop data={data} loading={loading} category={category} />
+        </Second>
+      )}
       <SearchPage>
-        <SearchCard />
+        <SearchCard setSelectedCard={setSelectedCard} />
       </SearchPage>
+      {selectedCard && (
+        <CardModal card={selectedCard} onClose={() => setSelectedCard(null)} />
+      )}
     </Container>
   );
 };

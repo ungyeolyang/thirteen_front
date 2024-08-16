@@ -15,14 +15,18 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div`
-  width: 90%;
-  max-width: 600px;
+  width: 850px; /* 차트의 최대 너비 */
+  height: 630px; /* 차트의 최대 높이 */
   background-color: #2c2c2c;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   color: #e0e0e0;
   text-align: center;
+  h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
 `;
 
 const CloseButton = styled.button`
@@ -39,7 +43,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+const StockModal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
   return (
@@ -53,4 +57,4 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   );
 };
 
-export default Modal;
+export default StockModal;

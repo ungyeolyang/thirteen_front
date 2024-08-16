@@ -118,14 +118,14 @@ const Refund = ({ user, onModify }) => {
     const finalTax = incomeTax - taxCredit;
 
     // 7. 환급액 계산
-    const refundAmount = paidTax - finalTax;
+    const refundAmount = user?.tax - finalTax;
 
     setRefund(refundAmount);
   };
 
   useEffect(() => {
     calculateRefund();
-  }, [user?.pay, paidTax]);
+  }, [user?.pay, user?.tax]);
 
   return (
     <>
@@ -159,7 +159,7 @@ const Refund = ({ user, onModify }) => {
             <input
               type="text"
               placeholder={
-                user?.pay ? user?.pay : `납부한 소득세를 입력해주세요`
+                user?.tax ? user?.tax : `납부한 소득세를 입력해주세요`
               }
               value={paidTax}
               onChange={(e) => {
@@ -170,6 +170,15 @@ const Refund = ({ user, onModify }) => {
               }}
             />
           </InputBox>
+          <Button
+            width={`20%`}
+            height={"30px"}
+            onClick={() => {
+              paidTax && onModify(paidTax, 6);
+            }}
+          >
+            수정
+          </Button>
         </Lbox>
         <Rbox>
           <p>회원님의 예상 환급액은 {Math.floor(refund)}원 입니다.</p>

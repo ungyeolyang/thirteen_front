@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import CardImg from "../../image/HD_10393_20240704-174740_ver.png";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Container = styled.div`
   width: 100%;
@@ -59,7 +61,7 @@ const Front = styled.div`
   cursor: pointer;
   width: 100%;
   height: 100%;
-  background-image: url(${CardImg});
+  background-image: url(${({ url }) => url && url});
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -98,110 +100,58 @@ const Text = styled.div`
   flex-direction: column;
 `;
 
-const CardTop = () => {
+const CardTop = ({ data, loading, category }) => {
+  const [top, setTop] = useState();
+
+  useEffect(() => {
+    const getTop = async () => {
+      console.log(category);
+      try {
+        const res = await axios.get(
+          `http://127.0.0.1:5000/api/topcard?categories=${category}`,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Response received:", res.data);
+        setTop(res.data);
+      } catch (error) {
+        console.error("Error occurred:", error.message);
+      }
+    };
+    data && !loading && getTop();
+  }, [category]);
+
   return (
     <Container>
       <Second>
         <SuggestionP>
           <p>고객의 소비패턴에 따른 카드 추천 Top 5</p>
         </SuggestionP>
-
         <SuggestionCard>
-          <CardWrapper>
-            <Card>
-              <Front></Front>
-              <Back>
-                <LineB></LineB>
-
-                <Text>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                </Text>
-              </Back>
-            </Card>
-          </CardWrapper>
-          <CardWrapper>
-            <Card>
-              <Front></Front>
-              <Back>
-                <LineB></LineB>
-
-                <Text>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                </Text>
-              </Back>
-            </Card>
-          </CardWrapper>
-          <CardWrapper>
-            <Card>
-              <Front></Front>
-              <Back>
-                <LineB></LineB>
-
-                <Text>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                </Text>
-              </Back>
-            </Card>
-          </CardWrapper>
-          <CardWrapper>
-            <Card>
-              <Front></Front>
-              <Back>
-                <LineB></LineB>
-
-                <Text>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                </Text>
-              </Back>
-            </Card>
-          </CardWrapper>
-          <CardWrapper>
-            <Card>
-              <Front></Front>
-              <Back>
-                <LineB></LineB>
-
-                <Text>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                </Text>
-              </Back>
-            </Card>
-          </CardWrapper>
+          {top &&
+            top.map((card) => (
+              <CardWrapper id={card.id}>
+                <Card>
+                  <Front url={card.cimage}></Front>
+                  <Back>
+                    <LineB></LineB>
+                    <Text>
+                      <p>
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry.
+                      </p>
+                      <p>
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry.
+                      </p>
+                    </Text>
+                  </Back>
+                </Card>
+              </CardWrapper>
+            ))}
         </SuggestionCard>
       </Second>
     </Container>

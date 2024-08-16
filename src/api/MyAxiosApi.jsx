@@ -25,5 +25,8 @@ const MyAxiosApi = {
   withdraw: async () => {
     return await AxiosInstance.get(LOGO + "/withdraw");
   },
+  Pay: async (payment) => {
+    return await AxiosInstance.post(LOGO + "/pay", payment);
+  },
 };
 export default MyAxiosApi;
