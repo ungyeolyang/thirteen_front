@@ -4,6 +4,7 @@ import Modal from "../../component/Modal";
 import BoardModalContent from "../admin/BoardModalContent";
 import BoardApi from "../../api/BoardAxiosApi";
 import { useNavigate } from "react-router-dom";
+import StockChart from "./StockChart";
 
 // 페이드 인 애니메이션 정의
 const fadeIn = keyframes`
@@ -24,6 +25,7 @@ const WebText = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
 const fadeInAnimation = css`
   animation: ${fadeIn} 0.8s forwards;
 `;
@@ -60,7 +62,6 @@ const ChirdBox = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
-
   justify-content: space-around;
   align-items: center;
   flex-direction: column;
@@ -97,6 +98,7 @@ const SubSection1Box = styled.div`
     transform: translateY(-5px);
   }
 `;
+
 const CardText = styled.div`
   width: 100%;
   height: 100%;
@@ -107,6 +109,7 @@ const CardText = styled.div`
   text-align: center;
   line-height: 2;
 `;
+
 const StockText = styled.div`
   width: 100%;
   height: 100%;
@@ -117,17 +120,43 @@ const StockText = styled.div`
   text-align: center;
   line-height: 2;
 `;
+
 const SubSection1 = styled.div`
   width: 70%;
-  height: 80%;
-  border: red 2px solid;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CardBox = styled.div``;
+const StockBox = styled.div`
+  width: 100%;
+  height: auto;
+  background: rgba(0, 0, 0, 0.8);
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+  ${(props) => props.isVisible && fadeInAnimation};
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 
   &:hover {
     transform: translateY(-10px) rotate(-1deg);
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  div {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%);
+    text-align: center;
+    width: 50%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #777;
   }
 `;
 
@@ -181,17 +210,19 @@ const Main = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isFirstBoxVisible, setIsFirstBoxVisible] = useState(false);
   const [isSecondBoxVisible, setIsSecondBoxVisible] = useState(false);
+  const [isStockBoxVisible, setIsStockBoxVisible] = useState(false);
 
   const navigate = useNavigate();
 
   const firstBoxRef = useRef(null);
   const secondBoxRef = useRef(null);
+  const stockBoxRef = useRef(null);
 
   useEffect(() => {
     const options = {
       root: null, // viewport
       rootMargin: "0px",
-      threshold: 0.8, // 요소의 50%가 보일 때
+      threshold: 1, // 요소의 100%가 보일 때 나옴
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -206,6 +237,11 @@ const Main = () => {
             setIsSecondBoxVisible(true);
           }
         }
+        if (entry.target === stockBoxRef.current) {
+          if (entry.isIntersecting && !isStockBoxVisible) {
+            setIsStockBoxVisible(true);
+          }
+        }
       });
     }, options);
 
@@ -215,6 +251,9 @@ const Main = () => {
     if (secondBoxRef.current) {
       observer.observe(secondBoxRef.current);
     }
+    if (stockBoxRef.current) {
+      observer.observe(stockBoxRef.current);
+    }
 
     return () => {
       if (firstBoxRef.current) {
@@ -223,8 +262,11 @@ const Main = () => {
       if (secondBoxRef.current) {
         observer.unobserve(secondBoxRef.current);
       }
+      if (stockBoxRef.current) {
+        observer.unobserve(stockBoxRef.current);
+      }
     };
-  }, [isFirstBoxVisible, isSecondBoxVisible]);
+  }, [isFirstBoxVisible, isSecondBoxVisible, isStockBoxVisible]);
 
   const modalChildren = () => (
     <>
@@ -264,7 +306,11 @@ const Main = () => {
                   <br /> 일공이오에서 최적의 카드를 만나보세요
                 </p>
               </CardText>
-              <SubSection1 onClick={() => navigate("/cardpage")}></SubSection1>
+              <SubSection1 onClick={() => navigate("/cardpage")}>
+                <CardBox>
+                  c<div>카드추천 페이지 이동</div>
+                </CardBox>
+              </SubSection1>
             </SubSection1Box>
           </Box>
           <Box ref={secondBoxRef} style={{ background: "#333" }}>
@@ -273,9 +319,14 @@ const Main = () => {
               color="#fff"
               isVisible={isSecondBoxVisible}
             >
-              <SubSection1
-                onClick={() => navigate("/stocksuggestion")}
-              ></SubSection1>
+              <SubSection1>
+                <StockBox ref={stockBoxRef} isVisible={isStockBoxVisible}>
+                  <div onClick={() => navigate("/stocksuggestion")}>
+                    주식추천 페이지 이동
+                  </div>
+                  <StockChart />
+                </StockBox>
+              </SubSection1>
               <StockText>
                 <h2>환급금으로 새로운 투자 기회를! 맞춤형 주식 추천</h2>
                 <p>

@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaCircleUser } from "react-icons/fa6";
+import LogoImg from "../image/LogoGreen-removebg-preview.png";
 
 const StyledHeader = styled.div`
   position: relative;
@@ -12,7 +13,7 @@ const StyledHeader = styled.div`
 `;
 
 const HeadBox = styled.div`
-  width: 90%;
+  width: 100%;
   height: 70%;
   display: flex;
   justify-content: space-between;
@@ -20,21 +21,22 @@ const HeadBox = styled.div`
 `;
 
 const Logo = styled.div`
-  color: #000;
   cursor: pointer;
-  width: 15%;
+  width: 20%;
   height: 100%;
   display: flex;
-  background: #ccc;
   align-items: center;
   justify-content: center;
-  border: 1px solid #000;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 const MyBox = styled.div`
   color: #858585;
   position: fixed;
-  top: 2%;
   right: 1%;
   cursor: pointer;
   width: 200px;
@@ -109,7 +111,9 @@ const Header = () => {
     <>
       <StyledHeader>
         <HeadBox>
-          <Logo onClick={() => navigate("/")}>로고</Logo>
+          <Logo onClick={() => navigate("/")}>
+            <img src={LogoImg} alt="로고" />
+          </Logo>
           <MyBox>
             <FaCircleUser onClick={() => navigate("/my")} />
             <DivBox>
