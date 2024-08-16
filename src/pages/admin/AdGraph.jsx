@@ -2,16 +2,30 @@ import { ResponsiveLine } from "@nivo/line";
 import { format, parseISO } from "date-fns";
 
 const AdGraph = ({ data }) => {
-  // 소셜 타입 별로 데이터 그룹화 및 날짜 파싱
-  const transformedData = ["COMMON", "KAKAO"].map((socialType) => ({
-    id: socialType,
-    data: data
-      .filter((user) => user.social === socialType)
-      .map((user) => ({
-        x: format(parseISO(user.mdate), "yyyy-MM-dd"), // x축에 날짜를 일 단위로 표시
-        y: 1, // 각 소셜 타입을 1로 계산
+  // 날짜별로 데이터를 그룹화
+  const dateMap = data.reduce((acc, user) => {
+    // mdate가 존재하지 않으면 무시
+    if (!user.mdate) return acc;
+
+    const dateKey = format(parseISO(user.mdate), "yyyy-MM-dd");
+    if (!acc[dateKey]) {
+      acc[dateKey] = 0;
+    }
+    // 각 날짜에 해당하는 소셜 카운트를 누적
+    acc[dateKey] += 1;
+    return acc;
+  }, {});
+
+  // 변환된 데이터를 라인 차트 포맷으로 변경
+  const transformedData = [
+    {
+      id: "Users", // COMMON과 KAKAO를 하나의 라인으로 통합
+      data: Object.keys(dateMap).map((date) => ({
+        x: date,
+        y: dateMap[date],
       })),
-  }));
+    },
+  ];
 
   return (
     <ResponsiveLine

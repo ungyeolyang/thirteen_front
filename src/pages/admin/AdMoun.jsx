@@ -46,7 +46,7 @@ const Tr = styled.tr`
 const PagingDiv = styled.div`
   width: 25%;
   height: 10%;
-  background-color: #fff;
+  /* background-color: #fff; */
   margin-top: 10px;
   display: flex;
   align-items: center;

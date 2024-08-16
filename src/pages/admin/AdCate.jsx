@@ -32,11 +32,19 @@ const Button = styled.div`
   }
 `;
 
+const LogoDiv = styled.div`
+  width: 40%;
+  height: 30%;
+  background-color: gray;
+`;
+
 const AdCate = ({ setMainView, mainview }) => {
   return (
     <>
       <Container>
-        <Box></Box>
+        <Box>
+          <LogoDiv>로고</LogoDiv>
+        </Box>
         <Box>
           <Button
             active={mainview === "member"}

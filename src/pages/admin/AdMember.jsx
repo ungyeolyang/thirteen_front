@@ -6,6 +6,7 @@ import BoardApi from "../../api/BoardAxiosApi";
 import BoardModalContent from "./BoardModalContent";
 import Modal from "../../component/Modal";
 import AdGraph from "./AdGraph";
+import AdPie from "./Adpie";
 
 const Container = styled.div`
   width: 100%;
@@ -94,7 +95,7 @@ const Tr = styled.tr`
 const PagingDiv = styled.div`
   width: 25%;
   height: 10%;
-  background-color: #fff;
+  /* background-color: #fff; */
   margin-top: 10px;
   display: flex;
   align-items: center;
@@ -175,10 +176,11 @@ const AdMember = () => {
         <Tr key={index}>
           <Td>{user.nick}</Td>
           <Td>{user.email}</Td>
-          <Td>{user.mid}</Td>
+          <Td>{user.mdate}</Td>
           <Td>{user.social}</Td>
-          {/* <Td>{user.image}</Td> */}
           <Td>{user.tf}</Td>
+          {/* <Td>{user.mid}</Td> */}
+          {/* <Td>{user.image}</Td> */}
           <Td>
             <Button
               onClick={() => {
@@ -235,7 +237,9 @@ const AdMember = () => {
             <Graph>
               <AdGraph data={member} />
             </Graph>
-            <Donut></Donut>
+            <Donut>
+              <AdPie data={member} />
+            </Donut>
           </ChartBox>
           <BoardBox>
             <Table
