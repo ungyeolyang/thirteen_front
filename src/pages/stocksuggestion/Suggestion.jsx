@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Modal from "./StockModal"; // 모달 컴포넌트 임포트
 import axios from "axios";
-import { Line } from "react-chartjs-2";
+import { Line, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
+  BarElement,
   LineElement,
   Title,
   Tooltip,
@@ -20,6 +21,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
@@ -287,6 +289,7 @@ const StockSuggestion = () => {
   const [predictedPrices, setPredictedPrices] = useState([]); // 예측된 주가를 저장할 state 추가
   const [latestPrice, setLatestPrice] = useState(null); // 금일 종가를 저장할 state 추가
   const [error, setError] = useState(null);
+  const [results1, setResults1] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -370,12 +373,56 @@ const StockSuggestion = () => {
     },
   };
 
+  useEffect(() => {
+    // 예시 데이터를 사용하여 그래프를 시각화
+    const fetchData = async () => {
+      const response = await axios.post("http://localhost:5000/Flask", {
+        price: 50000, // 예시 가격
+      });
+      setResults1(response.data);
+    };
+
+    fetchData();
+  }, []);
+
+  const filteredResults = results1
+    .filter((stock) => stock.change_rate <= 20)
+    .sort((a, b) => b.change_rate - a.change_rate)
+    .slice(0, 5);
+
+  const chartData1 = {
+    labels: filteredResults.map(
+      (stock) => `${stock.ticker_name}(${stock.ticker})`
+    ),
+    datasets: [
+      {
+        label: "등락률 (%)",
+        data: filteredResults.map((stock) => stock.change_rate.toFixed(2)),
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+  const chartOptions1 = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Top 5 주식 등락률",
+      },
+    },
+  };
+
   return (
     <Container>
       <PredictionContainer>
         <PredictionTextBox>
           <h2>회원 예상 환급액: ???,??? 원</h2>
-          <form onSubmit={handleSubmit}>
+          {/* <form onSubmit={handleSubmit}>
             <label htmlFor="price">가격 입력:</label>
             <input
               type="number"
@@ -386,40 +433,43 @@ const StockSuggestion = () => {
               required
             />
             <button type="submit">검색</button>
-          </form>
+          </form> */}
           <h4>
             회원님의 예상 환급액으로 구매할 수 있는 주식 Best를 추천해드립니다!
           </h4>
         </PredictionTextBox>
-        <div id="results">
+        {/* <div id="results">
           {error && <p>{error}</p>}
           {results && (
             <>
-              <h2>추천 주식:</h2>
+              <h2>TOP5</h2>
               {results.length === 0 ? (
                 <p>추천 종목이 없습니다.</p>
               ) : (
                 <ul>
-                  {results.map((stock, index) => (
-                    <li key={index}>
-                      <strong>{stock.ticker}</strong>
-                      <br />
-                      최신 종가: {stock.latest_price}
-                      <br />
-                      예측 가격: {stock.predicted_price}
-                      <br />
-                      등락률: {stock.change_rate.toFixed(2)}%
-                    </li>
-                  ))}
+                  {results
+                    .filter((stock) => stock.change_rate <= 20) // 등락률이 20% 이하인 주식만 필터링
+                    .sort((a, b) => b.change_rate - a.change_rate) // 등락률 기준으로 내림차순 정렬
+                    .slice(0, 5) // 상위 5개의 항목만 선택
+                    .map((stock, index) => (
+                      <li key={index}>
+                        <strong>
+                          {stock.ticker_name}({stock.ticker})
+                        </strong>
+                        <br />
+                        종가: {stock.latest_price}
+                        <br />
+                        예측 가격: {stock.predicted_price.toFixed(0)}
+                        <br />
+                        등락률: {stock.change_rate.toFixed(2)}%
+                      </li>
+                    ))}
                 </ul>
               )}
             </>
           )}
-        </div>
-        <StockChartBox>
-          <StockChart1></StockChart1>
-          <StockChart2></StockChart2>
-        </StockChartBox>
+        </div> */}
+        <Bar data={chartData1} options={chartOptions1} />
       </PredictionContainer>
       <SearchContainer>
         <Form onSubmit={handlePredictStock}>
