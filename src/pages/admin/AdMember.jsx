@@ -79,6 +79,9 @@ const Td = styled.td`
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  @media (max-width: 1263px) {
+    font-size: 0.2rem;
+  }
 `;
 
 const Tr = styled.tr`
@@ -90,6 +93,9 @@ const Tr = styled.tr`
   &:hover {
     background: #f1f1f1;
   }
+  /* @media (max-width: 1263px) {
+    width: 60%;
+  } */
 `;
 
 const PagingDiv = styled.div`
@@ -122,6 +128,7 @@ const AdMember = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [pageCnt, setPageCnt] = useState([]);
+  const [graphMember, setGraphMember] = useState([]);
 
   const openModal = () => {
     setModalOpen((prev) => !prev);
@@ -135,10 +142,19 @@ const AdMember = () => {
   };
 
   useEffect(() => {
+    const graphUser = async () => {
+      try {
+        const res = await BoardApi.graphList();
+        setGraphMember(res.data);
+      } catch (e) {}
+    };
+    graphUser();
+  }, []);
+
+  useEffect(() => {
     const getAlluser = async () => {
       try {
         const res = await BoardApi.alluser(page);
-        console.log(res.data.user);
 
         if (res.data) {
           setMember(res.data.user);
@@ -189,7 +205,7 @@ const AdMember = () => {
                 openModal();
               }}
               backgroundColor={`#4aa1e7`}
-              width={`60%`}
+              width={`80%`}
               height={`60%`}
             >
               수정
@@ -235,10 +251,10 @@ const AdMember = () => {
         <Box>
           <ChartBox>
             <Graph>
-              <AdGraph data={member} />
+              <AdGraph data={graphMember} />
             </Graph>
             <Donut>
-              <AdPie data={member} />
+              <AdPie data={graphMember} />
             </Donut>
           </ChartBox>
           <BoardBox>

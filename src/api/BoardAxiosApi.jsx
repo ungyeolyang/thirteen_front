@@ -57,5 +57,8 @@ const BoardApi = {
     };
     return await AxiosInstance.post(LOGO + `/cupdate`, dto);
   },
+  graphList: async () => {
+    return await AxiosInstance.get(LOGO + `/graph`);
+  },
 };
 export default BoardApi;
