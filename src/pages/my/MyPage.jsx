@@ -9,53 +9,119 @@ import EditPw from "./EditPw";
 import EditEamil from "./EditEmail";
 import Modal from "../../component/Modal";
 import { useNavigate } from "react-router-dom";
+import { MdLogout } from "react-icons/md";
 
+// 전체 컨테이너
 const Container = styled.div`
   display: flex;
+  width: 100%;
+  min-height: 80vh;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  padding: 20px;
+
+  @media (max-width: 1024px) {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
 `;
+
+// 왼쪽 메뉴박스
 const MenuBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 27px;
-  gap: 100px;
+  font-size: 24px;
+  gap: 60px;
   width: 20%;
-  height: 88vh;
-  box-shadow: 1px 1px 1px 1px silver;
-`;
-const Menu = styled.div`
-  display: flex;
-  width: 80%;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-  color: ${({ active }) => active && `RGB(113, 153, 255)`};
-  cursor: pointer;
-  &:hover {
-    color: RGB(113, 153, 255);
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+
+  @media (max-width: 1024px) {
+    width: 80%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
+
+// 메뉴 아이템
+const Menu = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  color: ${({ active }) => (active ? "#7189FF" : "#333")};
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: #7189ff;
+    background-color: #f0f4f8;
+  }
+
+  @media (max-width: 1024px) {
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+`;
+
+// 오른쪽 박스
 const RightBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80%;
-  height: 88vh;
+  width: 75%;
+  height: auto;
+  padding: 20px;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  }
 `;
+
+// 정보박스
 const InfoBox = styled.div`
-  width: 90%;
-  height: 90%;
-  border-radius: 5%;
-  background-color: silver;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
+
+// 회원탈퇴 경고박스
 const DelBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: silver;
+  color: #000;
   width: 100%;
-  height: 200px;
+  height: 150px;
+  border-radius: 15px;
+  font-size: 20px;
+  text-align: center;
 `;
 
 const MyPage = () => {
@@ -188,18 +254,19 @@ const MyPage = () => {
             <IoPersonCircleOutline style={{ fontSize: `60px` }} />
             정보수정
           </Menu>
-          <Menu
+          {/* <Menu
             onClick={() => setCategory("환급액 확인")}
             active={category === "환급액 확인"}
           >
             <FaCoins style={{ fontSize: `45px` }} />
             환급액 확인
-          </Menu>
+          </Menu> */}
           <Menu
             onClick={() => {
               setDelModalOpen(true);
             }}
           >
+            <MdLogout style={{ fontSize: `60px` }} />
             회원탈퇴
           </Menu>
         </MenuBox>
@@ -222,4 +289,5 @@ const MyPage = () => {
     </>
   );
 };
+
 export default MyPage;

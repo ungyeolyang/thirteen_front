@@ -23,6 +23,7 @@ import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { FaHouseChimney } from "react-icons/fa6";
 import { CgDanger } from "react-icons/cg";
 import { RiFileExcelLine } from "react-icons/ri";
+import Quiz from "../admin/Quiz";
 
 const SpinnerContainer = styled.div`
   display: flex;
@@ -31,7 +32,29 @@ const SpinnerContainer = styled.div`
   height: 100%;
   width: 100%;
   background: #fff;
+  text-align: center;
   z-index: 1000;
+
+  @media (max-width: 1024px) {
+    gap: 20px;
+    flex-direction: column;
+    height: auto;
+  }
+`;
+
+const Sbox = styled.div`
+  width: 40%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-direction: column;
+
+  @media (max-width: 1024px) {
+    width: 90%;
+    height: 150px;
+  }
 `;
 
 const Spinner = styled.div`
@@ -53,20 +76,14 @@ const Spinner = styled.div`
   }
 `;
 
-const Header = styled.div`
-  width: 100%;
-  height: 15vh;
-  background: #000;
-`;
-
 const Container = styled.div`
   position: relative;
   width: 100vw;
-  height: 500px;
+  height: auto;
 `;
 const FileBoxAfter = styled.div`
   width: 50%;
-  height: 60%;
+  height: 100%;
   background: #ccc;
   display: flex;
   justify-content: center;
@@ -74,20 +91,35 @@ const FileBoxAfter = styled.div`
 `;
 const Cell = styled.div`
   width: 100%;
-  height: 100%;
+  height: 500px;
   background: #ccc;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    padding: 20px 10px;
+    gap: 10px;
+    height: auto;
+  }
 `;
 const CellB = styled.div`
   width: 100%;
-  height: 100%;
+  height: 500px;
   background: #ccc;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+    min-height: 300px;
+    padding: 20px 10px;
+  }
 `;
 const FileBox = styled.div`
   width: 50%;
@@ -113,10 +145,17 @@ const RightBox = styled.div`
   width: 40%;
   height: 90%;
   display: flex;
-  justify-content: space-between;
+  overflow: hidden;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   background: #fff;
+
+  @media (max-width: 1024px) {
+    width: 90%;
+    height: 50%;
+    order: 1;
+  }
 `;
 const Line = styled.div`
   width: 100%;
@@ -141,6 +180,12 @@ const LeftBox = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+  @media (max-width: 1024px) {
+    width: 90%;
+    height: 50%;
+    order: 1;
+  }
 `;
 const SummerTop = styled.div`
   width: 100%;
@@ -162,6 +207,7 @@ const TotalAmount = styled.h3`
   width: 100%;
   height: 20%;
   display: flex;
+  text-align: center;
   justify-content: center;
   align-items: center;
 `;
@@ -176,6 +222,10 @@ const BarContainer = styled.div`
   overflow: hidden;
   display: flex;
   align-items: center;
+
+  @media (max-width: 1024px) {
+    width: 80%;
+  }
 `;
 
 const Bar = styled.div`
@@ -201,6 +251,8 @@ const ListItem = styled.li`
 
 const JobBox = styled.div`
   width: 100%;
+  height: 100%;
+  overflow: hidden;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -226,6 +278,9 @@ const MoreButton = styled.button`
 const FileInputBox = styled.div`
   width: 100%;
   height: 80%;
+  @media (max-width: 1024px) {
+    min-width: 300px;
+  }
 `;
 const FileInput = styled.input`
   display: none; /* 숨기기 */
@@ -238,7 +293,7 @@ const CustomLabel = styled.label`
   flex-direction: column;
   font-size: 30px;
   width: 100%;
-  height: 100%;
+  height: 200px;
   background-color: #007bff;
   color: white;
   border-radius: 5px;
@@ -309,7 +364,7 @@ const CardPage = ({ data, setData, loading, setLoading, setCategory }) => {
     try {
       console.log("Sending request with file:", file);
       const response = await axios.post(
-        "http://127.0.0.1:5000/api/upload",
+        "http://192.168.10.13:5000/api/upload",
         formData,
         {
           headers: {
@@ -350,8 +405,14 @@ const CardPage = ({ data, setData, loading, setLoading, setCategory }) => {
         <CellB>
           {loading ? (
             <SpinnerContainer>
-              <Spinner />
-              <p>소비 내역 분석 중..</p>
+              <Sbox>
+                <p>
+                  카드내역 분석중 입니다..사용내역에 따라 시간 소요가 될수
+                  있음에 양해 부탁드립니다
+                </p>
+                <Spinner />
+              </Sbox>
+              <Quiz />
             </SpinnerContainer>
           ) : (
             <>
@@ -456,8 +517,14 @@ const CardPage = ({ data, setData, loading, setLoading, setCategory }) => {
       <Cell>
         {loading ? (
           <SpinnerContainer>
-            <Spinner />
-            <p>소비 내역 분석 중..</p>
+            <Sbox>
+              <p>
+                카드내역 분석중 입니다..사용내역에 따라 시간 소요가 될수 있음에
+                양해 부탁드립니다
+              </p>
+              <Spinner />
+            </Sbox>
+            <Quiz />
           </SpinnerContainer>
         ) : (
           <>
@@ -526,7 +593,7 @@ const CardPage = ({ data, setData, loading, setLoading, setCategory }) => {
                             style={{
                               justifyContent: "space-between",
                               borderRadius: "0",
-                              width: "350px",
+                              width: "300px",
                               height: "50px",
                               background: "#555",
                             }}

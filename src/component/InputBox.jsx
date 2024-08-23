@@ -19,12 +19,16 @@ const InputBox = styled.div`
     font-weight: bold;
     background-color: ${({ background }) =>
       background ? background : `transparent`};
-    border: 1px solid black;
+    border: 1px solid silver;
     border-radius: 10px;
     outline: none;
   }
   input::placeholder {
     font-size: 24px;
+
+    @media (max-width: 768px) {
+      font-size: 18px;
+    }
   }
   svg {
     position: absolute;

@@ -117,7 +117,9 @@ const EditEamil = ({
 
   return (
     <Container>
-      <InputBox>
+      <InputBox
+        style={{ width: `100%`, height: `100px`, marginBottom: `10px` }}
+      >
         <GoMail style={{ color: `gray` }} />
         <input
           type="text"
@@ -127,7 +129,10 @@ const EditEamil = ({
             Common.onKeyDownEnter(e, isClickCert ? onClickModify : onClickEmail)
           }
           disabled={isClickCert}
-          style={{ border: message && "3px solid red" }}
+          style={{
+            border: message && "3px solid red",
+            height: `100%`,
+          }}
         />
         <button
           onClick={
@@ -143,7 +148,7 @@ const EditEamil = ({
       </InputBox>
       {isClickCert && (
         <>
-          <InputBox>
+          <InputBox style={{ marginBottom: `10px`, width: `100%` }}>
             <GoLock style={{ color: `gray` }} />
             <input
               type="text"
@@ -156,7 +161,9 @@ const EditEamil = ({
       )}
       <Error>{message}</Error>
 
-      <Button onClick={onClickModify}>수정</Button>
+      <Button onClick={onClickModify} style={{ height: `35px`, width: `70%` }}>
+        수정
+      </Button>
     </Container>
   );
 };

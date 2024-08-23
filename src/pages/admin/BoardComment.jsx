@@ -7,7 +7,6 @@ const SaveDiv = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  background-color: #acaaaa;
 `;
 
 const TitleDiv = styled.div`
@@ -35,7 +34,7 @@ const TitleP = styled.div`
 `;
 const TitleInput = styled.input`
   width: 62%;
-  background-color: #acaaaa;
+
   border: 0cap;
   font-size: 1rem;
   box-sizing: border-box;
@@ -53,7 +52,6 @@ const ContentInput = styled.input`
   width: 100%;
   height: 74%;
   text-align: center;
-  background-color: #acaaaa;
   border: 0cap;
   font-size: 1rem;
   box-sizing: border-box;

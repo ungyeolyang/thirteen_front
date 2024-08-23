@@ -10,6 +10,8 @@ import InputBox from "../../component/InputBox";
 const SignBox = styled.div`
   width: 100%;
   height: 80%;
+  position: relative;
+  top: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,6 +34,38 @@ const Error = styled.div`
 `;
 const ErrorBox = styled.div``;
 
+const OkButton = styled.button`
+  cursor: pointer;
+  width: 200px;
+  height: 40px;
+  background: #c80000;
+  font-size: 25px;
+  border-radius: 15px;
+  color: #fff;
+  border: none;
+  &:hover {
+    background-color: rgb(193, 78, 78);
+  }
+`;
+const NoButton = styled.button`
+  cursor: pointer;
+  width: 200px;
+  height: 40px;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  font-size: 25px;
+  color: #fff;
+  border: none;
+  &:hover {
+    background-color: #8c98a3;
+  }
+`;
+
+const EButton = styled.button`
+  width: 70px;
+  height: 35px;
+  font-size: 20px;
+`;
 const Signup = () => {
   const navigate = useNavigate();
 
@@ -305,7 +339,7 @@ const Signup = () => {
             disabled={isClickCert}
             style={{ border: emailMessage && "3px solid red" }}
           />
-          <button
+          <EButton
             onClick={
               isClickCert
                 ? () => {
@@ -315,7 +349,7 @@ const Signup = () => {
             }
           >
             {isClickCert ? `수정` : `인증`}
-          </button>
+          </EButton>
         </InputBox>
         <ErrorBox>
           <Error>{idMessage}</Error>
@@ -339,12 +373,12 @@ const Signup = () => {
           </>
         )}
         <ButtonContainer>
-          <button
+          <NoButton
             onClick={() => navigate("/login", { state: { fromLogin: true } })}
           >
             취소
-          </button>
-          <button onClick={onClickJoin}>가입하기</button>
+          </NoButton>
+          <OkButton onClick={onClickJoin}>가입하기</OkButton>
         </ButtonContainer>
       </SignBox>
     </>

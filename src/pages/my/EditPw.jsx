@@ -80,7 +80,9 @@ const EditPw = ({ input, setInput, message, setMessage, onModify }) => {
   return (
     <>
       <Container>
-        <InputBox>
+        <InputBox
+          style={{ width: `100%`, height: `50px`, marginBottom: `10px` }}
+        >
           <LockIcon style={{ color: `gray` }} />
           <input
             type={isEye ? `text` : `password`}
@@ -88,7 +90,12 @@ const EditPw = ({ input, setInput, message, setMessage, onModify }) => {
             onChange={(e) => setCurPw(e.target.value)}
             disabled={isCurPw}
             maxLength={20}
-            style={{ fontSize: `25px`, paddingTop: `5px` }}
+            style={{
+              fontSize: `25px`,
+              paddingTop: `5px`,
+              width: `100%`,
+              height: `50px`,
+            }}
           />
           {isEye ? (
             <EyeIcon
@@ -109,14 +116,19 @@ const EditPw = ({ input, setInput, message, setMessage, onModify }) => {
         <Error>{pwMessage}</Error>
         {isCurPw && (
           <>
-            <InputBox>
+            <InputBox style={{ marginBottom: `10px`, width: `100%` }}>
               <LockIcon style={{ color: `gray` }} />
               <input
                 type={isEye1 ? `text` : `password`}
                 placeholder="새 비밀번호"
                 onChange={(e) => setInput(e.target.value)}
                 maxLength={20}
-                style={{ fontSize: `25px`, paddingTop: `5px` }}
+                style={{
+                  fontSize: `25px`,
+                  paddingTop: `5px`,
+                  width: `100%`,
+                  height: `50px`,
+                }}
               />
               {isEye1 ? (
                 <EyeIcon
@@ -134,14 +146,19 @@ const EditPw = ({ input, setInput, message, setMessage, onModify }) => {
                 />
               )}
             </InputBox>
-            <InputBox>
+            <InputBox style={{ marginBottom: `10px`, width: `100%` }}>
               <LockIcon style={{ color: `gray` }} />
               <input
                 type={isEye2 ? `text` : `password`}
                 placeholder="새 비밀번호 확인"
                 onChange={(e) => setCheckPw(e.target.value)}
                 maxLength={20}
-                style={{ fontSize: `25px`, paddingTop: `5px` }}
+                style={{
+                  fontSize: `25px`,
+                  paddingTop: `5px`,
+                  width: `100%`,
+                  height: `50px`,
+                }}
               />
               {isEye2 ? (
                 <EyeIcon

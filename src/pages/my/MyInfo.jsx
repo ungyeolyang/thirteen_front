@@ -7,23 +7,40 @@ import InputBox from "../../component/InputBox";
 import { storage } from "../../api/Firebase";
 const Container = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   gap: 20px;
   width: 100%;
   height: 100%;
+  align-items: center;
+  position: relative;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
 const ProfileBox = styled.div`
-  position: relative;
-  width: 150px;
-  height: 150px;
+  width: 300px;
+  height: 300px;
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
   button {
-    position: absolute;
-    padding: 5px;
+    padding: 10px 20px;
     border-radius: 10px;
     border: none;
     box-shadow: 1px 1px 1px 1px gray;
-    bottom: 0;
-    right: 0;
+
+    @media (max-width: 1024px) {
+      font-size: 16px;
+    }
+  }
+  @media (max-width: 1024px) {
+    width: 200px;
+    height: 200px;
   }
 `;
 const Cdiv = styled.div`
@@ -59,13 +76,76 @@ const MyInfo = ({
     }
   };
 
+  const Div = styled.div`
+    width: 100%;
+    height: 100px;
+
+    display: flex;
+    position: relative;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    p {
+      position: absolute;
+      left: 15px;
+      top: 0;
+    }
+
+    @media (max-width: 768px) {
+      height: 90px;
+    }
+  `;
+  const Box = styled.div`
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    position: relative;
+  `;
+
+  const NickB = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `;
+  const Btn = styled.button`
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    background: #fff;
+    border: 1px solid silver;
+    cursor: pointer;
+
+    &:hover {
+      background: #bbbbbb;
+      color: #fff;
+    }
+    @media (max-width: 1024px) {
+      font-size: 16px;
+    }
+
+    @media (max-width: 768px) {
+      padding: 10px 15px;
+    }
+  `;
+
   const Error = styled.div`
     display: flex;
     align-items: center;
     color: #ff3f3f;
-    font-size: 24px;
+    font-size: 18px;
     min-height: 26px;
     visibility: ${({ children }) => (children === "" ? `hidden` : `visible`)};
+    position: absolute;
+    bottom: -60%;
+
+    @media (max-width: 768px) {
+      font-size: 16px;
+      bottom: -55%;
+    }
   `;
 
   const onClickEdit = (type) => {
@@ -132,7 +212,7 @@ const MyInfo = ({
           <ProfileBox>
             <Profile
               src={previewUrl || user?.image}
-              size={`100%`}
+              size={`70%`}
               onClick={user?.social === "COMMON" ? onClickInputFile : undefined}
             >
               <input
@@ -143,49 +223,58 @@ const MyInfo = ({
               />
             </Profile>
             {user?.social === "COMMON" && (
-              <button onClick={onClickProfile}>수정</button>
+              <Btn onClick={onClickProfile}>프로필 변경</Btn>
             )}
           </ProfileBox>
         </Cdiv>
         <Cdiv>
           {user?.social === "COMMON" && (
-            <div>
+            <Div>
               <p>이메일</p>
-              <InputBox background={`white`} width={`100%`}>
-                <input type="text" placeholder={user?.email} disabled />
-              </InputBox>
-              <button onClick={() => onClickEdit(4)}>수정</button>
-            </div>
+              <Box>
+                <InputBox background={`white`} width={`80%`}>
+                  <input type="text" placeholder={user?.email} disabled />
+                </InputBox>
+                <Btn onClick={() => onClickEdit(4)}>수정</Btn>
+              </Box>
+            </Div>
           )}
-          <div>
+          <Div>
             <p>닉네임</p>
-            <InputBox background={`white`} width={`100%`}>
-              <input
-                type="text"
-                placeholder={user?.nick}
-                onChange={(e) => setInputNick(e.target.value)}
-                disabled={user?.social === "COMMON" ? false : true}
-              />
-            </InputBox>
-            <Error>{message}</Error>
-            {user?.social === "COMMON" && (
-              <button onClick={onClickNick}>수정</button>
-            )}
-          </div>
-          <div>
-            <p>아이디</p>
-            <InputBox background={`white`} width={`100%`}>
-              <input type="text" placeholder={user?.mid} disabled />
-            </InputBox>
-          </div>
-          {user?.social === "COMMON" && (
-            <div>
-              <p>비밀번호</p>
-              <InputBox background={`white`} width={`100%`}>
-                <input type="text" placeholder={`비밀번호`} disabled />
+            <Box>
+              <InputBox background={`white`} width={`80%`}>
+                <input
+                  type="text"
+                  placeholder={user?.nick}
+                  onChange={(e) => setInputNick(e.target.value)}
+                  disabled={user?.social === "COMMON" ? false : true}
+                />
               </InputBox>
-              <button onClick={() => onClickEdit(2)}>수정</button>
-            </div>
+              <Error>{message}</Error>
+
+              {user?.social === "COMMON" && (
+                <Btn onClick={onClickNick}>수정</Btn>
+              )}
+            </Box>
+          </Div>
+          <Div>
+            <p>아이디</p>
+            <Box>
+              <InputBox background={`white`} width={`80%`}>
+                <input type="text" placeholder={user?.mid} disabled />
+              </InputBox>
+            </Box>
+          </Div>
+          {user?.social === "COMMON" && (
+            <Div>
+              <p>비밀번호</p>
+              <Box>
+                <InputBox background={`white`} width={`80%`}>
+                  <input type="text" placeholder={`비밀번호`} disabled />
+                </InputBox>
+                <Btn onClick={() => onClickEdit(2)}>수정</Btn>
+              </Box>
+            </Div>
           )}
         </Cdiv>
       </Container>

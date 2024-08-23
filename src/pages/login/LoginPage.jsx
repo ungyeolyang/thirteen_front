@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from "styled-components";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import Logo from "../../image/로고.svg";
+import Logo from "../../image/LogoGreen-removebg-previewN.png";
 import Modal from "../../component/Modal";
 import { useEffect } from "react";
 import Common from "../../utils/Common";
@@ -33,8 +33,9 @@ const Container = styled.div`
 const Pentagon = styled.div`
   position: absolute;
   left: -10%;
-  width: 1900px;
-  height: 1900px;
+  width: 100vw;
+  height: 200vh;
+  aspect-ratio: 1 / 1;
   background-position: center;
   background-image: url("https://static.toss.im/assets/homepage/newtossim/new_main.png");
   clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
@@ -57,9 +58,12 @@ const LogoBox = styled.div`
   position: absolute;
   cursor: pointer;
   top: 50px;
-  width: 150px;
-  height: 150px;
-  background-image: url(${Logo});
+  width: 70%;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
 `;
 const Odiv = styled.div`
   position: relative;
@@ -103,7 +107,9 @@ const LoginPage = () => {
       {!Common.getAccessToken() && (
         <Container flexDirection={flexDirection}>
           <Odiv>
-            <LogoBox onClick={() => navigate("/")} />
+            <LogoBox onClick={() => navigate("/")}>
+              <img src={Logo} alt="로고" />
+            </LogoBox>
             <Outlet />
           </Odiv>
           <Pdiv>

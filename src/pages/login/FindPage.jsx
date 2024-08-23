@@ -26,11 +26,36 @@ const FindBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 80%;
+  height: 50px;
   gap: 10px;
-  height: auto;
 `;
-
+const OkButton = styled.button`
+  cursor: pointer;
+  width: 200px;
+  height: 40px;
+  background: #c80000;
+  font-size: 25px;
+  border-radius: 15px;
+  color: #fff;
+  border: none;
+  &:hover {
+    background-color: rgb(193, 78, 78);
+  }
+`;
+const NoButton = styled.button`
+  cursor: pointer;
+  width: 200px;
+  height: 40px;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  font-size: 25px;
+  color: #fff;
+  border: none;
+  &:hover {
+    background-color: #8c98a3;
+  }
+`;
 const FindPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -161,12 +186,14 @@ const FindPage = () => {
         />
       )}
       <FindBtn>
-        <button
+        <NoButton
           onClick={() => navigate("/login", { state: { fromLogin: true } })}
         >
           취소
-        </button>
-        <button onClick={isFindPw ? onClickReset : onClickFind}>확인</button>
+        </NoButton>
+        <OkButton onClick={isFindPw ? onClickReset : onClickFind}>
+          확인
+        </OkButton>
       </FindBtn>
     </>
   );

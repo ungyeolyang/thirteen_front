@@ -17,10 +17,18 @@ const Container = styled.div`
   gap: 30px;
 `;
 
+const First = styled.div`
+  @media (max-width: 1024px) {
+    width: 100%;
+    height: auto;
+  }
+`;
+
 const Second = styled.div`
   width: 100%;
-  height: 600px;
+  height: auto;
   display: flex;
+
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -39,17 +47,24 @@ const CardMain = () => {
 
   return (
     <Container>
-      <CardPage
-        category={category}
-        setCategory={setCategory}
-        setLoading={setLoading}
-        loading={loading}
-        data={data}
-        setData={setData}
-      />
+      <First>
+        <CardPage
+          category={category}
+          setCategory={setCategory}
+          setLoading={setLoading}
+          loading={loading}
+          data={data}
+          setData={setData}
+        />
+      </First>
       {data && (
         <Second>
-          <CardTop data={data} loading={loading} category={category} />
+          <CardTop
+            data={data}
+            loading={loading}
+            category={category}
+            setSelectedCard={setSelectedCard}
+          />
         </Second>
       )}
       <SearchPage>

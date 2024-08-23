@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import CardImg from "../../image/HD_10393_20240704-174740_ver.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -16,7 +15,8 @@ const Container = styled.div`
 
 const Second = styled.div`
   width: 100%;
-  height: 600px;
+  height: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -25,14 +25,20 @@ const Second = styled.div`
 
 const SuggestionP = styled.div`
   width: 100%;
-  height: 100px;
-  margin-top: 15px;
-  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
   text-align: center;
+  font-size: 25px;
+  color: #fff;
+  background: #c14e4e;
 `;
+
 const SuggestionCard = styled.div`
   width: 100%;
-  height: 500px;
+  flex-wrap: wrap;
+  height: auto;
   display: flex;
   gap: 20px;
   justify-content: center;
@@ -51,7 +57,9 @@ const Card = styled.div`
   position: relative;
   transform-style: preserve-3d;
   transition: transform 1s ease;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
   &:hover {
     transform: rotateY(180deg) translateY(-30px);
   }
@@ -59,70 +67,110 @@ const Card = styled.div`
 
 const Front = styled.div`
   cursor: pointer;
-  width: 100%;
-  height: 100%;
+  width: ${({ isPortrait }) => (isPortrait ? "209px" : "331px")};
+  height: ${({ isPortrait }) => (isPortrait ? "331px" : "209px")};
   background-image: url(${({ url }) => url && url});
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   position: absolute;
   backface-visibility: hidden;
   display: flex;
   justify-content: center;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   align-items: center;
+  transform: ${({ rotate }) => (rotate ? "rotate(90deg)" : "none")};
 `;
 
-const Back = styled.div`
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-  border-radius: 13px;
-  background: #c14e4e;
-  color: #ccc;
+const CardBack = styled.div`
+  width: 209px;
+  height: 331px;
   position: absolute;
-  backface-visibility: hidden;
+  background: #ccc;
+  border-radius: 15px;
+  color: #fff;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  backface-visibility: hidden;
   transform: rotateY(180deg);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 `;
+
 const LineB = styled.div`
-  width: 15%;
+  width: 20%;
   height: 100%;
-  background: #000000;
+  background: #000;
 `;
 
-const Text = styled.div`
-  width: 60%;
+const CardText = styled.div`
+  width: 65%;
+  height: 60%;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
   flex-direction: column;
 `;
 
-const CardTop = ({ data, loading, category }) => {
-  const [top, setTop] = useState();
+const ModalBtn = styled.div`
+  width: 100%;
+  height: 50px;
+  color: #000;
+  background: #fff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  border-radius: 20px;
+  display: flex;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    border: 1px solid #00bfff;
+  }
+`;
+
+const CardTop = ({ data, loading, category, setSelectedCard }) => {
+  const [top, setTop] = useState([]);
 
   useEffect(() => {
     const getTop = async () => {
-      console.log(category);
       try {
         const res = await axios.get(
-          `http://127.0.0.1:5000/api/topcard?categories=${category}`,
+          `http://192.168.10.13:5000/api/topcard?categories=${category}`,
           {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           }
         );
-        console.log("Response received:", res.data);
-        setTop(res.data);
+
+        const processedCards = await Promise.all(
+          res.data.map(async (card) => {
+            const img = new Image();
+            img.src = card.cimage;
+            await img.decode();
+
+            const isPortrait = img.height > img.width; // 세로로 배치된 경우
+            const rotate = !isPortrait; // 가로로 배치된 경우
+
+            return {
+              ...card,
+              isPortrait,
+              rotate,
+            };
+          })
+        );
+
+        setTop(processedCards);
       } catch (error) {
         console.error("Error occurred:", error.message);
       }
     };
-    data && !loading && getTop();
-  }, [category]);
+
+    if (data && !loading) {
+      getTop();
+    }
+  }, [category, data, loading]);
 
   return (
     <Container>
@@ -133,22 +181,22 @@ const CardTop = ({ data, loading, category }) => {
         <SuggestionCard>
           {top &&
             top.map((card) => (
-              <CardWrapper id={card.id}>
+              <CardWrapper id={card.id} key={card.id}>
                 <Card>
-                  <Front url={card.cimage}></Front>
-                  <Back>
+                  <Front
+                    url={card.cimage}
+                    isPortrait={card.isPortrait}
+                    rotate={card.rotate}
+                  ></Front>
+                  <CardBack>
                     <LineB></LineB>
-                    <Text>
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
-                      </p>
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
-                      </p>
-                    </Text>
-                  </Back>
+                    <CardText>
+                      <h2>{card.ccname}</h2>
+                      <ModalBtn onClick={() => setSelectedCard(card)}>
+                        <p>자세히 보기</p>
+                      </ModalBtn>
+                    </CardText>
+                  </CardBack>
                 </Card>
               </CardWrapper>
             ))}

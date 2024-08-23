@@ -9,7 +9,6 @@ import {
   LinearScale,
   PointElement,
   BarElement,
-  BarElement,
   LineElement,
   Title,
   Tooltip,
@@ -22,7 +21,6 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  BarElement,
   BarElement,
   Title,
   Tooltip,
@@ -224,6 +222,11 @@ const ChartContainer = styled.div`
   border-radius: 15px;
   padding: 20px;
   border: 2px solid #007bff; /* 파란색 테두리 */
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 // 버튼 컨테이너
@@ -341,7 +344,7 @@ const StockSuggestion = () => {
   const getStocksName = async () => {
     try {
       const res = await axios.get(
-        `http://127.0.0.1:5000/api/stock?query=${inputStock}`,
+        `http://192.168.10.13:5000/api/stock?query=${inputStock}`,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -353,28 +356,30 @@ const StockSuggestion = () => {
       console.error("Error occurred:", error.message);
     }
   };
-
-  const getTop5 = async () => {
-    try {
-      const res = await axios.get(
-        `http://127.0.0.1:5000/api/top5?price=16000`,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      setResults(res.data);
-    } catch (error) {
-      console.error("Error occurred:", error.message);
-    }
-  };
+  useEffect(() => {
+    const getTop5 = async () => {
+      try {
+        const res = await axios.get(
+          `http://192.168.10.13:5000/api/top5?price=16000`,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setResults(res.data);
+      } catch (error) {
+        console.error("Error occurred:", error.message);
+      }
+    };
+    getTop5();
+  }, []);
 
   const getPredict = async (ticker) => {
     setLoading(true); // 로딩 시작
     try {
       const res = await axios.get(
-        `http://127.0.0.1:5000/api/predict?stock=${ticker}`,
+        `http://192.168.10.13:5000/api/predict?stock=${ticker}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -492,8 +497,7 @@ const StockSuggestion = () => {
       <Container>
         <PredictionContainer>
           <PredictionTextBox>
-            <button onClick={getTop5}>확인</button>
-            <h2>회원 예상 환급액: ???,??? 원</h2>
+            <h2>회원 예상 환급액: 16,000 원</h2>
             <Bar data={chartData1} options={chartOptions1} />
           </PredictionTextBox>
         </PredictionContainer>

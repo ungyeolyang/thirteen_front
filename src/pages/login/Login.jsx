@@ -39,7 +39,6 @@ const HeaderBox = styled.div`
   width: 70%;
   font-weight: bold;
   font-size: 26px;
-  margin: 100px 0;
 `;
 const Hdiv = styled.div`
   width: 100%;
@@ -50,7 +49,17 @@ const Hdiv = styled.div`
     font-size: 32px;
   }
 `;
-
+const Container = styled.div`
+  width: 500px;
+  height: 500px;
+  display: flex;
+  position: relative;
+  top: 10%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+`;
 const Login = () => {
   const navigate = useNavigate();
   const [inputId, setInputId] = useState("");
@@ -108,67 +117,69 @@ const Login = () => {
 
   return (
     <>
-      <HeaderBox>
-        <Hdiv>Welcome to</Hdiv>
-        <Hdiv>
-          <span>양웅열과 아이들</span>
-        </Hdiv>
-      </HeaderBox>
-      <InputBox>
-        <GoPerson style={{ color: `gray` }} />
-        <input
-          type="text"
-          placeholder="아이디"
-          onChange={(e) => setInputId(e.target.value)}
-          onKeyDown={(e) => Common.onKeyDownEnter(e, onClickLogin)}
-        />
-      </InputBox>
-      <InputBox>
-        <GoLock style={{ color: `gray` }} />
-        <input
-          type="password"
-          placeholder="비밀번호"
-          value={inputPw}
-          onChange={(e) => setInputPw(e.target.value)}
-          onKeyDown={(e) => Common.onKeyDownEnter(e, onClickLogin)}
-        />
-      </InputBox>
-      <Error>{message}</Error>
-      <Button onClick={onClickLogin}>
-        <div>로그인 </div>
-      </Button>
-      <Button>
-        <KakaoLogin />
-      </Button>
-      <Line>
-        <span>계정이 없으신가요?</span>
-        <SignupBox
-          onClick={() => {
-            navigate("signup", { state: { fromLogin: false } });
-          }}
-          color="RGB(113, 153, 255)"
-          hover="#002A8E"
-        >
-          회원가입
-        </SignupBox>
-      </Line>
-      <Line>
-        <SignupBox
-          onClick={() => {
-            navigate("find", { state: { fromLogin: false, category: "id" } });
-          }}
-        >
-          아이디 찾기
-        </SignupBox>
-        <span>ㅣ</span>
-        <SignupBox
-          onClick={() => {
-            navigate("find", { state: { fromLogin: false, category: "pw" } });
-          }}
-        >
-          비밀번호 찾기
-        </SignupBox>
-      </Line>
+      <Container>
+        <HeaderBox>
+          <Hdiv>Welcome to</Hdiv>
+          <Hdiv>
+            <span>양웅열과 아이들</span>
+          </Hdiv>
+        </HeaderBox>
+        <InputBox>
+          <GoPerson style={{ color: `gray` }} />
+          <input
+            type="text"
+            placeholder="아이디"
+            onChange={(e) => setInputId(e.target.value)}
+            onKeyDown={(e) => Common.onKeyDownEnter(e, onClickLogin)}
+          />
+        </InputBox>
+        <InputBox>
+          <GoLock style={{ color: `gray` }} />
+          <input
+            type="password"
+            placeholder="비밀번호"
+            value={inputPw}
+            onChange={(e) => setInputPw(e.target.value)}
+            onKeyDown={(e) => Common.onKeyDownEnter(e, onClickLogin)}
+          />
+        </InputBox>
+        <Error>{message}</Error>
+        <Button onClick={onClickLogin}>
+          <div>로그인 </div>
+        </Button>
+        <Button>
+          <KakaoLogin />
+        </Button>
+        <Line>
+          <span>계정이 없으신가요?</span>
+          <SignupBox
+            onClick={() => {
+              navigate("signup", { state: { fromLogin: false } });
+            }}
+            color="RGB(113, 153, 255)"
+            hover="#002A8E"
+          >
+            회원가입
+          </SignupBox>
+        </Line>
+        <Line>
+          <SignupBox
+            onClick={() => {
+              navigate("find", { state: { fromLogin: false, category: "id" } });
+            }}
+          >
+            아이디 찾기
+          </SignupBox>
+          <span>ㅣ</span>
+          <SignupBox
+            onClick={() => {
+              navigate("find", { state: { fromLogin: false, category: "pw" } });
+            }}
+          >
+            비밀번호 찾기
+          </SignupBox>
+        </Line>
+      </Container>
     </>
   );
 };

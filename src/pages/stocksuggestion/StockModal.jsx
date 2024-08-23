@@ -16,7 +16,7 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   width: 850px; /* 차트의 최대 너비 */
-  height: 630px; /* 차트의 최대 높이 */
+  height: auto;
   background-color: #2c2c2c;
   padding: 20px;
   border-radius: 10px;
@@ -26,6 +26,10 @@ const ModalContent = styled.div`
   h2 {
     font-size: 30px;
     margin-bottom: 20px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
 

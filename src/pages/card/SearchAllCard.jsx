@@ -9,8 +9,20 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background: #ececec;
   gap: 30px;
   overflow: hidden;
+`;
+
+const AllCard = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+  font-size: 25px;
+  color: #fff;
+  background: #c14e4e;
 `;
 
 const Cardbox = styled.div`
@@ -46,8 +58,8 @@ const Card = styled.div`
 `;
 
 const CardInner = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 300px;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -132,23 +144,61 @@ const Pagination = styled.div`
   justify-content: center;
   align-items: center;
   gap: 10px;
-  width: 80%;
-  height: 150px;
+  width: 100%;
+  height: 100px;
+
+  @media (max-width: 768px) {
+    padding: 0 10px;
+  }
 `;
 
 const PageButton = styled.button`
-  width: 100px;
+  width: 90px;
   height: 30px;
   border-radius: 50px;
   border: none;
-  font-size: 20px;
+  font-size: 18px;
   background-color: #007bff;
   color: white;
   cursor: pointer;
+  padding: 0 10px;
 
   &:disabled {
     background-color: #adadad;
     cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    width: 80px;
+    height: 25px;
+    font-size: 16px;
+  }
+`;
+const Input = styled.input`
+  width: 50%;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 30px;
+  font-size: 25px;
+  outline: none;
+  border: none;
+  color: #fff;
+  text-align: center;
+
+  &::placeholder {
+    color: #fff;
+    font-size: 30px;
+  }
+  &:focus {
+    border: 1px solid blue;
+    background: #fff;
+    color: #000;
+  }
+  @media (max-width: 1024px) {
+    width: 80%;
+  }
+  @media (max-width: 425px) {
+    width: 90%;
   }
 `;
 
@@ -186,7 +236,7 @@ const CardImage = styled.img`
   transition: transform 0.3s ease;
 `;
 
-const SearchCard = ({ setSelectedCard }) => {
+const SearchCard = ({ setSelectedCard, onImageLoaded }) => {
   const [searchCards, setSearchCards] = useState([]);
   const [inputSearch, setInputSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -206,7 +256,7 @@ const SearchCard = ({ setSelectedCard }) => {
     const getCard = async () => {
       try {
         const res = await axios.get(
-          `http://127.0.0.1:5000/api/card?query=${inputSearch}`,
+          `http://192.168.10.13:5000/api/card?query=${inputSearch}`,
           {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -215,12 +265,18 @@ const SearchCard = ({ setSelectedCard }) => {
         );
         // console.log("Response received:", res.data);
         setSearchCards(res.data);
+        if (onImageLoaded) {
+          // 이미지 로드 시 콜백 호출
+          const randomCard =
+            res.data[Math.floor(Math.random() * res.data.length)];
+          onImageLoaded(randomCard.cimage);
+        }
       } catch (error) {
         console.error("Error occurred:", error.message);
       }
     };
     getCard();
-  }, [inputSearch]);
+  }, [inputSearch, onImageLoaded]);
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
@@ -256,7 +312,10 @@ const SearchCard = ({ setSelectedCard }) => {
 
   return (
     <Container>
-      <input
+      <AllCard>
+        <p>ALL CARD</p>
+      </AllCard>
+      <Input
         placeholder="검색"
         onChange={(e) => {
           setInputSearch(e.target.value);
@@ -289,7 +348,7 @@ const SearchCard = ({ setSelectedCard }) => {
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
-          Previous
+          Prev
         </PageButton>
         {getPageButtons().map((number) => (
           <PageButton

@@ -1,3 +1,4 @@
+// Main.js
 import React, { useState, useEffect, useRef } from "react";
 import styled, { keyframes, css } from "styled-components";
 import Modal from "../../component/Modal";
@@ -5,6 +6,10 @@ import BoardModalContent from "../admin/BoardModalContent";
 import BoardApi from "../../api/BoardAxiosApi";
 import { useNavigate } from "react-router-dom";
 import StockChart from "./StockChart";
+import RollingSlide from "./RollingSlide"; // 추가된 컴포넌트
+import axios from "axios";
+import FAQ from "./FaqBox";
+import AdGong from "../admin/AdGong";
 
 // 페이드 인 애니메이션 정의
 const fadeIn = keyframes`
@@ -18,16 +23,17 @@ const fadeIn = keyframes`
   }
 `;
 
-const WebText = styled.div`
-  width: 100%;
-  height: 50vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const fadeInAnimation = css`
   animation: ${fadeIn} 0.8s forwards;
+`;
+
+const WebText = styled.div`
+  width: 70%;
+  height: 50vh;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Container = styled.div`
@@ -56,13 +62,17 @@ const Box = styled.div`
   justify-content: space-around;
   align-items: center;
   box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    height: 100vh;
+  }
 `;
 
 const ChirdBox = styled.div`
   width: 100%;
-  height: 100vh;
+  height: auto;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   box-sizing: border-box;
@@ -70,9 +80,8 @@ const ChirdBox = styled.div`
 
 const HalfHeightSection = styled.div`
   width: 100%;
-  height: 70vh;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   box-sizing: border-box;
   margin: 20px 0;
@@ -82,7 +91,7 @@ const SubSection1Box = styled.div`
   width: 80%;
   height: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   border-radius: 8px;
   overflow: hidden;
@@ -97,10 +106,13 @@ const SubSection1Box = styled.div`
   &:hover {
     transform: translateY(-5px);
   }
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const CardText = styled.div`
-  width: 100%;
+  width: 40%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -108,10 +120,15 @@ const CardText = styled.div`
   flex-direction: column;
   text-align: center;
   line-height: 2;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 20px;
+  }
 `;
 
 const StockText = styled.div`
-  width: 100%;
+  width: 40%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -119,28 +136,74 @@ const StockText = styled.div`
   flex-direction: column;
   text-align: center;
   line-height: 2;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 20px;
+  }
 `;
 
 const SubSection1 = styled.div`
-  width: 70%;
+  width: 50%;
   height: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 20px;
+  }
+`;
+const CardPageGo = styled.div`
+  /* position: absolute; */
+  width: 300px;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #fff;
+
+  &:hover {
+    background: #666;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 18px;
+    text-align: center;
+  }
+
+  @media (max-width: 425px) {
+    font-size: 16px;
+  }
+`;
+const CardBox = styled.div`
+  width: 100vw;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  border-radius: 8px;
 `;
 
-const CardBox = styled.div``;
 const StockBox = styled.div`
   width: 100%;
-  height: auto;
-  background: rgba(0, 0, 0, 0.8);
+  height: 100px;
+  background: none;
   opacity: ${(props) => (props.isVisible ? 1 : 0)};
   ${(props) => props.isVisible && fadeInAnimation};
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
+  position: absolute;
 
   &:hover {
-    transform: translateY(-10px) rotate(-1deg);
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
     background: rgba(0, 0, 0, 0.3);
   }
@@ -148,31 +211,44 @@ const StockBox = styled.div`
   div {
     position: absolute;
     left: 50%;
-    top: 40%;
-    transform: translate(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
     width: 50%;
-    height: 30%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     background: #777;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover div {
+    opacity: 1;
   }
 `;
 
 const SubSection = styled.div`
-  width: 40%;
+  width: 70%;
   height: 100%;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+`;
+
+const Div = styled.div`
+  width: 100%;
+  height: 70px;
+  color: #fff;
+  background: #9e9e9e;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
-  overflow: hidden;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
+  font-size: 30px;
+  margin-bottom: 10px;
 `;
 
 const TableSection = styled.div`
@@ -211,6 +287,8 @@ const Main = () => {
   const [isFirstBoxVisible, setIsFirstBoxVisible] = useState(false);
   const [isSecondBoxVisible, setIsSecondBoxVisible] = useState(false);
   const [isStockBoxVisible, setIsStockBoxVisible] = useState(false);
+  const [searchCards, setSearchCards] = useState([]);
+  const [slideImages, setSlideImages] = useState([]);
 
   const navigate = useNavigate();
 
@@ -219,10 +297,40 @@ const Main = () => {
   const stockBoxRef = useRef(null);
 
   useEffect(() => {
+    const getCard = async () => {
+      try {
+        const res = await axios.get(
+          `http://192.168.10.13:5000/api/card?query=${""}`,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setSearchCards(res.data);
+      } catch (error) {
+        console.error("Error occurred:", error.message);
+      }
+    };
+    getCard();
+  }, []);
+
+  useEffect(() => {
+    if (searchCards.length > 0) {
+      // 무작위로 7개의 이미지를 선택합니다.
+      const images = searchCards
+        .map((card) => card.cimage) // cimage가 이미지 URL을 포함한다고 가정
+        .sort(() => Math.random() - 0.5) // 무작위로 섞기
+        .slice(0, 7); // 상위 7개 이미지 선택
+      setSlideImages(images);
+    }
+  }, [searchCards]);
+
+  useEffect(() => {
     const options = {
       root: null, // viewport
       rootMargin: "0px",
-      threshold: 1, // 요소의 100%가 보일 때 나옴
+      threshold: 0.7, // 요소의 100%가 보일 때 나옴
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -295,7 +403,6 @@ const Main = () => {
         <WebText>
           <h1>당신의 환급금을 최고의 가치로 바꾸는 맞춤형 금융 솔루션</h1>
         </WebText>
-        {/* 첫 번째 페이지: 주식 추천과 카드 추천 */}
         <SuggestionBox>
           <Box ref={firstBoxRef}>
             <SubSection1Box color="#333" isVisible={isFirstBoxVisible}>
@@ -306,10 +413,13 @@ const Main = () => {
                   <br /> 일공이오에서 최적의 카드를 만나보세요
                 </p>
               </CardText>
-              <SubSection1 onClick={() => navigate("/cardpage")}>
+              <SubSection1>
                 <CardBox>
-                  c<div>카드추천 페이지 이동</div>
+                  <RollingSlide images={slideImages} />
                 </CardBox>
+                <CardPageGo onClick={() => navigate("/cardpage")}>
+                  카드추천 페이지 이동
+                </CardPageGo>
               </SubSection1>
             </SubSection1Box>
           </Box>
@@ -320,11 +430,11 @@ const Main = () => {
               isVisible={isSecondBoxVisible}
             >
               <SubSection1>
+                <StockChart />
                 <StockBox ref={stockBoxRef} isVisible={isStockBoxVisible}>
                   <div onClick={() => navigate("/stocksuggestion")}>
                     주식추천 페이지 이동
                   </div>
-                  <StockChart />
                 </StockBox>
               </SubSection1>
               <StockText>
@@ -338,17 +448,14 @@ const Main = () => {
             </SubSection1Box>
           </Box>
         </SuggestionBox>
-
-        {/* 두 번째 페이지: FAQ, 1:1 문의, 공지사항, 푸터 */}
         <ChirdBox>
-          <HalfHeightSection style={{ height: "50vh" }}>
+          <HalfHeightSection>
             <SubSection bgColor="#f8f8f8" color="#333">
-              FAQ
-            </SubSection>
-            <SubSection bgColor="#f8f8f8" color="#333" onClick={openModal}>
-              1:1 문의
+              <Div>FAQ</Div>
+              <FAQ />
             </SubSection>
           </HalfHeightSection>
+
           <TableSection>
             공지사항
             <table>
