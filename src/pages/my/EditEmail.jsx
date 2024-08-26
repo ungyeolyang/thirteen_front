@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import AuthAxiosApi from "../../api/AuthAxiosApi";
 import { GoLock, GoMail } from "react-icons/go";
@@ -31,18 +31,17 @@ const Error = styled.div`
 const EditEamil = ({
   input,
   setInput,
-  message,
-  setMessage,
   member,
   closeModal,
   onModify,
+  btnRef,
 }) => {
-  const [checkEmail, setCheckEmail] = useState("");
   const [isClickCert, setIsClickCert] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
   const [isCert, setIsCert] = useState(false);
   const [inputCert, setInputCert] = useState("");
   const [checkCert, setCheckCert] = useState("");
+  const [message, setMessage] = useState("");
 
   const onChangeEmail = (e) => {
     // if (checkEmail !== e.target.value) {
@@ -96,7 +95,6 @@ const EditEamil = ({
         "WQbPpTPtl4ML1Reqd"
       );
       setIsClickCert(true);
-      setCheckEmail(email);
     } catch (e) {
       console.log(e);
     }
@@ -104,22 +102,17 @@ const EditEamil = ({
 
   const onClickModify = async () => {
     console.log(checkCert);
-    if (checkCert != inputCert) {
+    if (!isEmail) {
+    } else if (checkCert != inputCert) {
       setMessage("인증번호가 일치하지 않습니다.");
-    } else if (checkEmail !== input) {
-      setMessage("이메일이 일치하지 않습니다.");
     } else {
-      try {
-        onModify(input, 4);
-      } catch (e) {}
+      onModify(input, 4);
     }
   };
 
   return (
     <Container>
-      <InputBox
-        style={{ width: `100%`, height: `100px`, marginBottom: `10px` }}
-      >
+      <InputBox style={{ width: `100%`, height: `50px`, marginBottom: `10px` }}>
         <GoMail style={{ color: `gray` }} />
         <input
           type="text"
@@ -161,9 +154,9 @@ const EditEamil = ({
       )}
       <Error>{message}</Error>
 
-      <Button onClick={onClickModify} style={{ height: `35px`, width: `70%` }}>
+      <button onClick={onClickModify} ref={btnRef} hidden>
         수정
-      </Button>
+      </button>
     </Container>
   );
 };

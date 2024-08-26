@@ -19,13 +19,13 @@ const ModalContent = styled.div`
   background: #f1f1f1;
   position: relative;
   display: flex;
-
   justify-content: start;
   align-items: center;
   flex-direction: column;
   border-radius: 8px;
-  width: 70%;
+  width: 50%;
   height: 600px;
+  gap: 25px;
 
   @media (max-width: 1024px) {
     width: 90%;
@@ -36,16 +36,23 @@ const ModalContent = styled.div`
 
 const Line = styled.div`
   width: 100%;
-  height: 60px;
+  height: 70px;
+  color: white;
   background: #007bff;
   display: flex;
   justify-content: end;
   align-items: center;
+  position: relative;
+  div {
+    position: absolute;
+  }
 `;
 
 const CardBox = styled.div`
   width: 100%;
-  height: 80%;
+  min-height: 430px;
+  max-height: 430px;
+  height: 45%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -72,11 +79,28 @@ const CardImg = styled.div`
   }
 `;
 
+const CardDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const Title = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+`;
+const Footer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: center;
+`;
 const ModalText = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 25px;
   flex-direction: column;
   width: 60%;
   text-align: center;
@@ -101,15 +125,18 @@ const ModalImage = styled.img`
 `;
 
 const CloseButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   color: white;
   width: 100px;
   height: 100%;
-  font-size: 60px;
+  font-size: 50px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-
+  z-index: 2;
   &:hover {
     color: #c14e4e;
   }
@@ -117,13 +144,31 @@ const CloseButton = styled.button`
 
 const BenefitsBox = styled.div`
   width: 100%;
-  height: 40%;
+  height: 80%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   padding: 10px 15px;
   align-items: center;
   overflow-y: auto;
+`;
+
+const BoldText = styled.span`
+  font-weight: bold;
+  font-size: 22px;
+`;
+
+const BenefitItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 5px 0;
+  padding: 10px;
+  gap: 10px;
+  font-size: 20px;
+  /* background-color: ${({ color }) => color || "#f80202"}; */
+  border-radius: 5px;
+  width: 100%;
 `;
 
 const CardModal = ({ card, onClose }) => {
@@ -141,41 +186,41 @@ const CardModal = ({ card, onClose }) => {
     }
   }, [card.cimage]);
 
+  const renderBenefits = () => {
+    return card.benefits.split(", ").map((benefit, index) => {
+      const [category, details] = benefit.split(" (");
+      return (
+        <BenefitItem key={index}>
+          <BoldText>{category.trim()}</BoldText>
+          {details?.replace(")", "")}
+        </BenefitItem>
+      );
+    });
+  };
+
   return (
     <ModalOverlay>
       <ModalContent>
         <Line>
+          <Title>{card.cname}</Title>
           <CloseButton onClick={onClose}>
             <RiCloseCircleLine />
           </CloseButton>
         </Line>
-        <CardBox>
-          <CardImg>
-            <ModalImage ref={imgRef} src={card.cimage} rotate={rotate} />
-          </CardImg>
-          <ModalText>
-            <h2>{card.cname}</h2>
-            <p>연회비 : {card.annualfee}</p>
-            <p>기준실적 : {card.performance}</p>
-            <BenefitsBox>
-              <p>
-                {card.benefits
-                  .replace(/,/g, " ") // 쉼표 제거
-                  .split(")") // ')' 기호로 문자열 분할
-                  .filter(Boolean) // 빈 문자열 제거
-                  .map((benefit, index) => (
-                    <span key={index}>
-                      {benefit.trim()}
-                      {index < card.benefits.split(")").length - 1 && (
-                        <br />
-                      )}{" "}
-                      {/* 마지막 항목에는 줄바꿈을 적용하지 않음 */}
-                    </span>
-                  ))}
-              </p>
-            </BenefitsBox>
-          </ModalText>
-        </CardBox>
+        <CardDiv>
+          <CardBox>
+            <CardImg>
+              <ModalImage ref={imgRef} src={card.cimage} rotate={rotate} />
+            </CardImg>
+            <ModalText>
+              <BenefitsBox>{renderBenefits()}</BenefitsBox>
+            </ModalText>
+          </CardBox>
+          <Footer>
+            <div>연회비 : {card.annualfee} , </div>
+            <div>기준실적 : {card.performance}</div>
+          </Footer>
+        </CardDiv>
       </ModalContent>
     </ModalOverlay>
   );

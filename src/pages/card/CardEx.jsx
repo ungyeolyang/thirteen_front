@@ -364,7 +364,7 @@ const CardPage = ({ data, setData, loading, setLoading, setCategory }) => {
     try {
       console.log("Sending request with file:", file);
       const response = await axios.post(
-        "http://192.168.10.13:5000/api/upload",
+        "http://localhost:5000/api/upload",
         formData,
         {
           headers: {
@@ -372,7 +372,7 @@ const CardPage = ({ data, setData, loading, setLoading, setCategory }) => {
           },
         }
       );
-      console.log("Response received:", response.data);
+      // console.log("Response received:", response.data);
       setData(response.data);
       setCategoryCounts(response.data.category_totals);
     } catch (error) {

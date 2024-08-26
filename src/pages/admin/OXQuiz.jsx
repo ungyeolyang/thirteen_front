@@ -83,6 +83,7 @@ const NextBtn = styled.div`
 `;
 
 const Feedback = styled.div`
+  width: 100%;
   font-size: 16px; /* 기본 폰트 크기 */
   display: flex;
   flex-direction: column;
@@ -99,6 +100,7 @@ const OXQuiz = ({ quizData }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [isCorrect, setIsCorrect] = useState(null);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const handleOptionChange = (optionIndex) => {
     setSelectedOption(optionIndex);
@@ -114,15 +116,17 @@ const OXQuiz = ({ quizData }) => {
 
     const feedbackMessage = isAnswerCorrect
       ? `<span style="color: green; font-size: 20px; font-weight: bold;">정답 : </span>${quizData[currentQuestionIndex].explanation}`
-      : `<span style="color: red; font-size: 20px; font-weight: bold;">틀림 : </span>${quizData[currentQuestionIndex].explanation}`;
+      : `<span style="color: red; font-size: 20px; font-weight: bold;">오답 : </span>${quizData[currentQuestionIndex].explanation}`;
 
     setFeedback(feedbackMessage);
+    setIsSubmit(true);
   };
 
   const handleNextQuestion = () => {
     setFeedback(null);
     setSelectedOption(null);
     setIsCorrect(null);
+    setIsSubmit(false);
     setCurrentQuestionIndex((prevIndex) => (prevIndex + 1) % quizData.length);
   };
 
@@ -146,14 +150,17 @@ const OXQuiz = ({ quizData }) => {
           X
         </Button>
       </BtnContainer>
-      <Btn>
-        <GoBtn onClick={handleSubmit}>제출</GoBtn>
-        <NextBtn onClick={handleNextQuestion}>
-          다음 문제
-          <IoIosArrowForward />
-        </NextBtn>
-      </Btn>
       {feedback && <Feedback dangerouslySetInnerHTML={{ __html: feedback }} />}
+      <Btn>
+        {isSubmit ? (
+          <NextBtn onClick={handleNextQuestion}>
+            다음 문제
+            <IoIosArrowForward />
+          </NextBtn>
+        ) : (
+          <GoBtn onClick={handleSubmit}>제출</GoBtn>
+        )}
+      </Btn>
     </Container>
   );
 };

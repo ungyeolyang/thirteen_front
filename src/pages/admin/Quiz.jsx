@@ -245,7 +245,7 @@ const quizData = [
 ];
 
 const Quiz = () => {
-  console.log("Quiz Component quizData:", quizData);
+  // console.log("Quiz Component quizData:", quizData);
   return (
     <Container>
       <OXQuiz quizData={quizData} />

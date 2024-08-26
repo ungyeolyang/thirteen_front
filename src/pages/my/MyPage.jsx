@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { FaCoins } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MyInfo from "./MyInfo";
 import MyAxiosApi from "../../api/MyAxiosApi";
 import Refund from "./Refund";
@@ -126,6 +126,7 @@ const DelBox = styled.div`
 
 const MyPage = () => {
   const navigate = useNavigate();
+  const btnRef = useRef(null);
   const [category, setCategory] = useState("정보수정");
   const [user, setUser] = useState();
   const [input, setInput] = useState("");
@@ -135,6 +136,7 @@ const MyPage = () => {
   const [header, setHeader] = useState();
   const [type, setType] = useState();
   const [refresh, setRefresh] = useState(false);
+  const [yes, setYes] = useState();
 
   useEffect(() => {
     const myInfo = async () => {
@@ -167,6 +169,7 @@ const MyPage = () => {
             setMessage={setMessage}
             message={message}
             setRefresh={setRefresh}
+            setYes={setYes}
           />
         );
       case "환급액 확인":
@@ -215,6 +218,8 @@ const MyPage = () => {
             message={message}
             setMessage={setMessage}
             onModify={onModify}
+            setYes={setYes}
+            btnRef={btnRef}
           />
         );
       case 4:
@@ -224,9 +229,8 @@ const MyPage = () => {
             member={user}
             input={input}
             setInput={setInput}
-            message={message}
-            setMessage={setMessage}
             onModify={onModify}
+            btnRef={btnRef}
           />
         );
       default:
@@ -273,7 +277,14 @@ const MyPage = () => {
         <RightBox>
           <InfoBox>{info()}</InfoBox>
         </RightBox>
-        <Modal open={modalOpen} close={closeModal} header={header}>
+        <Modal
+          open={modalOpen}
+          close={closeModal}
+          header={header}
+          type={true}
+          yes={yes}
+          confirm={() => btnRef.current.click()}
+        >
           {onEdit(type)}
         </Modal>
         <Modal

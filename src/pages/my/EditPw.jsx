@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { GoLock, GoEye, GoEyeClosed } from "react-icons/go";
 import MyAxiosApi from "../../api/MyAxiosApi";
 import InputBox from "../../component/InputBox";
+import Common from "../../utils/Common";
 
 const Container = styled.div`
   width: 100%;
@@ -39,7 +40,15 @@ const Error = styled.div`
   display: ${({ children }) => (children === "" ? `none` : `flex`)};
 `;
 
-const EditPw = ({ input, setInput, message, setMessage, onModify }) => {
+const EditPw = ({
+  input,
+  setInput,
+  message,
+  setMessage,
+  onModify,
+  setYes,
+  btnRef,
+}) => {
   const [isEye, setIsEye] = useState(false);
   const [isEye1, setIsEye1] = useState(false);
   const [isEye2, setIsEye2] = useState(false);
@@ -88,6 +97,7 @@ const EditPw = ({ input, setInput, message, setMessage, onModify }) => {
             type={isEye ? `text` : `password`}
             placeholder="현재 비밀번호"
             onChange={(e) => setCurPw(e.target.value)}
+            onKeyDown={(e) => Common.onKeyDownEnter(e, onClickCheck)}
             disabled={isCurPw}
             maxLength={20}
             style={{
@@ -122,6 +132,7 @@ const EditPw = ({ input, setInput, message, setMessage, onModify }) => {
                 type={isEye1 ? `text` : `password`}
                 placeholder="새 비밀번호"
                 onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => Common.onKeyDownEnter(e, onClickPw)}
                 maxLength={20}
                 style={{
                   fontSize: `25px`,
@@ -152,6 +163,7 @@ const EditPw = ({ input, setInput, message, setMessage, onModify }) => {
                 type={isEye2 ? `text` : `password`}
                 placeholder="새 비밀번호 확인"
                 onChange={(e) => setCheckPw(e.target.value)}
+                onKeyDown={(e) => Common.onKeyDownEnter(e, onClickPw)}
                 maxLength={20}
                 style={{
                   fontSize: `25px`,
@@ -179,9 +191,12 @@ const EditPw = ({ input, setInput, message, setMessage, onModify }) => {
             <Error>{message}</Error>
           </>
         )}
-
-        <button onClick={isCurPw ? onClickPw : onClickCheck}>
-          {isCurPw ? `수정` : `확인`}
+        <button
+          onClick={isCurPw ? onClickPw : onClickCheck}
+          ref={btnRef}
+          hidden
+        >
+          {isCurPw ? setYes(`수정`) : setYes(`확인`)}
         </button>
       </Container>
     </>

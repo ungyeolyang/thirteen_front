@@ -10,6 +10,7 @@ import RollingSlide from "./RollingSlide"; // 추가된 컴포넌트
 import axios from "axios";
 import FAQ from "./FaqBox";
 import AdGong from "../admin/AdGong";
+import Common from "../../utils/Common";
 
 // 페이드 인 애니메이션 정의
 const fadeIn = keyframes`
@@ -266,7 +267,9 @@ const TableSection = styled.div`
     border-collapse: collapse;
     margin-top: 20px;
   }
-
+  & td {
+    cursor: pointer;
+  }
   & th,
   & td {
     border: 1px solid #ddd;
@@ -277,6 +280,61 @@ const TableSection = styled.div`
   & th {
     background-color: #f5f5f5;
     font-weight: bold;
+  }
+
+  & th:nth-child(1),
+  & td:nth-child(1) {
+    width: 10%;
+  }
+
+  & th:nth-child(2),
+  & td:nth-child(2) {
+    width: 50%; /* 제목 열이 가장 넓게 설정 */
+  }
+
+  & th:nth-child(3),
+  & td:nth-child(3) {
+    width: 20%;
+  }
+
+  & th:nth-child(4),
+  & td:nth-child(4) {
+    width: 20%; /* 작성 시간 열의 너비를 줄임 */
+  }
+`;
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 100px;
+
+  @media (max-width: 768px) {
+    padding: 0 10px;
+  }
+`;
+
+const PageButton = styled.button`
+  width: 90px;
+  height: 30px;
+  border-radius: 50px;
+  border: none;
+  font-size: 18px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  padding: 0 10px;
+
+  &:disabled {
+    background-color: #adadad;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    width: 80px;
+    height: 25px;
+    font-size: 16px;
   }
 `;
 
@@ -289,6 +347,9 @@ const Main = () => {
   const [isStockBoxVisible, setIsStockBoxVisible] = useState(false);
   const [searchCards, setSearchCards] = useState([]);
   const [slideImages, setSlideImages] = useState([]);
+  const [gongList, setGongList] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageCnt, setPageCnt] = useState([]);
 
   const navigate = useNavigate();
 
@@ -300,7 +361,7 @@ const Main = () => {
     const getCard = async () => {
       try {
         const res = await axios.get(
-          `http://192.168.10.13:5000/api/card?query=${""}`,
+          `http://localhost:5000/api/card?query=${""}`,
           {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -314,6 +375,21 @@ const Main = () => {
     };
     getCard();
   }, []);
+
+  useEffect(() => {
+    const getGongJi = async () => {
+      try {
+        const currentPage = page === 0 ? page : page - 1;
+        const res = await BoardApi.boardList("gong", currentPage);
+        console.log(res.data);
+        setGongList(res.data.board);
+        setPageCnt(res.data.page);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getGongJi();
+  }, [page]);
 
   useEffect(() => {
     if (searchCards.length > 0) {
@@ -379,9 +455,10 @@ const Main = () => {
   const modalChildren = () => (
     <>
       <BoardModalContent
-        setTitle={setTitle}
-        setContent={setContent}
-        buttonlist={[{ text: "저장", func: boardSave }]}
+        title={content.title}
+        nick={content.member?.nick}
+        content={content.content}
+        read={true}
       />
     </>
   );
@@ -393,7 +470,34 @@ const Main = () => {
       closeModal();
     } catch (e) {}
   };
+  const onClickGong = (gong) => {
+    setModalOpen(true);
+    setContent(gong);
+  };
+  const handlePageChange = (pageNumber) => {
+    setPage(pageNumber);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // 부드러운 스크롤을 원할 경우 사용
+    });
+  };
+  const getPageButtons = () => {
+    const maxButtons = 5;
 
+    let startPage = Math.max(page - Math.floor(maxButtons / 2), 1);
+    let endPage = Math.min(startPage + maxButtons - 1, pageCnt);
+
+    if (endPage - startPage + 1 < maxButtons) {
+      startPage = Math.max(endPage - maxButtons + 1, 1);
+    }
+
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
@@ -455,7 +559,6 @@ const Main = () => {
               <FAQ />
             </SubSection>
           </HalfHeightSection>
-
           <TableSection>
             공지사항
             <table>
@@ -465,48 +568,52 @@ const Main = () => {
                   <th>제목</th>
                   <th>글쓴이</th>
                   <th>작성시간</th>
-                  <th>조회수</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>10</td>
-                  <td>안녕하세요</td>
-                  <td>글쓴이 이름</td>
-                  <td>20xx/xx/xx</td>
-                  <td>11</td>
-                </tr>
-                <tr>
-                  <td>10</td>
-                  <td>안녕하세요</td>
-                  <td>글쓴이 이름</td>
-                  <td>20xx/xx/xx</td>
-                  <td>11</td>
-                </tr>
-                <tr>
-                  <td>10</td>
-                  <td>안녕하세요</td>
-                  <td>글쓴이 이름</td>
-                  <td>20xx/xx/xx</td>
-                  <td>11</td>
-                </tr>
-                <tr>
-                  <td>10</td>
-                  <td>안녕하세요</td>
-                  <td>글쓴이 이름</td>
-                  <td>20xx/xx/xx</td>
-                  <td>11</td>
-                </tr>
+                {gongList &&
+                  gongList.map((gong, index) => (
+                    <tr onClick={() => onClickGong(gong)}>
+                      <td>{index + 1 + (page - 1) * 5}</td>
+                      <td>{gong.title}</td>
+                      <td>{gong.member.nick}</td>
+                      <td>{Common.formatDate(gong.bdate).slice(0, 13)}</td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
+            <Pagination>
+              <PageButton
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page === 1}
+              >
+                Prev
+              </PageButton>
+              {getPageButtons().map((number) => (
+                <PageButton
+                  key={number}
+                  onClick={() => handlePageChange(number)}
+                  disabled={number === page}
+                >
+                  {number}
+                </PageButton>
+              ))}
+              <PageButton
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page === pageCnt}
+              >
+                Next
+              </PageButton>
+            </Pagination>
           </TableSection>
         </ChirdBox>
       </Container>
       <Modal
         open={modalOpen}
         close={closeModal}
-        header={"자주 묻는 질문 작성"}
+        header={"공지사항"}
         children={modalChildren()}
+        no={"확인"}
       />
     </>
   );

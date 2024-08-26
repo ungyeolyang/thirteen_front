@@ -136,7 +136,7 @@ const CardTop = ({ data, loading, category, setSelectedCard }) => {
     const getTop = async () => {
       try {
         const res = await axios.get(
-          `http://192.168.10.13:5000/api/topcard?categories=${category}`,
+          `http://localhost:5000/api/topcard?categories=${category}`,
           {
             headers: {
               "Content-Type": "multipart/form-data",

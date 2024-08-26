@@ -73,7 +73,8 @@ const ButtonDiv = styled.div`
 `;
 
 const BoardModalContent = (props) => {
-  const { setTitle, setContent, buttonlist, title, content, read } = props;
+  const { setTitle, setContent, buttonlist, title, content, read, nick } =
+    props;
 
   const buttonMap = () => {
     return (
@@ -104,7 +105,11 @@ const BoardModalContent = (props) => {
           </TitleInside>
           <TitleInside>
             <TitleP>글쓴이 : </TitleP>
-            <TitleInput type="text" value={"닉네임"} readOnly={true} />
+            <TitleInput
+              type="text"
+              value={nick ? nick : "닉네임"}
+              readOnly={true}
+            />
           </TitleInside>
         </TitleDiv>
         <ContentInput

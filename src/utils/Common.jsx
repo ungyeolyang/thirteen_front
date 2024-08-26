@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const Common = {
-  DOMAIN: "http://192.168.10.13:8111", // Controller 주소
+  DOMAIN: "http://localhost:8111", // Controller 주소
 
   getAccessToken: () => {
     return localStorage.getItem("accessToken");
@@ -34,7 +34,6 @@ const Common = {
       );
       console.log(res.data);
       Common.setAccessToken(res.data.accessToken);
-      Common.setExpiresIn(res.data.accessTokenExpiresIn);
       return true;
     } catch (err) {
       console.log(err);

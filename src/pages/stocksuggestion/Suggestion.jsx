@@ -63,46 +63,27 @@ const PredictionTextBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
   margin-bottom: 20px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 어두운 그림자 */
   border-radius: 10px; /* 둥근 테두리 */
+  gap: 10px;
 
   & > h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     text-align: left;
     margin-left: 10px;
     color: #ffffff; /* 밝은 텍스트 */
+    gap: 20px;
   }
   & > h4 {
     width: 100%;
     text-align: center;
     color: #bbbbbb; /* 중간 밝기 텍스트 */
   }
-`;
-
-// 주식 차트를 담는 박스
-const StockChartBox = styled.div`
-  width: 100%;
-  height: 500px;
-  background-color: #2c2c2c; /* 다크 배경 */
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-radius: 10px; /* 둥근 테두리 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 어두운 그림자 */
-`;
-
-const StockChart1 = styled.div`
-  width: 35%;
-  height: 80%;
-  border: 2px solid white;
-`;
-const StockChart2 = styled.div`
-  width: 35%;
-  height: 80%;
-  border: 2px solid white;
 `;
 
 // 검색 및 추천 섹션 컨테이너
@@ -139,6 +120,7 @@ const SearchInput = styled.input`
   color: #e0e0e0;
   border: none;
   outline: none;
+  text-align: center;
 
   &:focus {
     outline: none;
@@ -191,29 +173,6 @@ const SearchResultItem = styled.div`
   }
 `;
 
-const Footer = styled.div`
-  margin-top: auto;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-`;
-
-const OpenModalButton = styled.button`
-  background-color: #007bff;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 0 10px;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
 const ChartContainer = styled.div`
   width: 800px; /* 차트의 최대 너비 */
   height: 400px; /* 차트의 최대 높이 */
@@ -237,51 +196,6 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-// 개별 버튼 스타일
-const PredictionButton = styled.button`
-  background-color: #e0e0e0;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  margin: 5px;
-
-  &:hover {
-    background-color: #cccccc;
-  }
-`;
-
-// 표 컨테이너
-const TableContainer = styled.div`
-  background-color: #f0f0f0;
-  border-radius: 15px;
-  padding: 20px;
-  border: 2px solid #007bff; /* 파란색 테두리 */
-  text-align: center;
-  color: black;
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-`;
-
-const TableHeader = styled.th`
-  padding: 10px;
-  border: 1px solid #dddddd;
-  background-color: #f7f7f7;
-  font-weight: bold;
-`;
-
-const TableCell = styled.td`
-  padding: 10px;
-  border: 1px solid #dddddd;
-  background-color: #ffffff;
-`;
-
-// 로딩 스피너 스타일
 const SpinnerContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -289,7 +203,29 @@ const SpinnerContainer = styled.div`
   height: 100%;
   width: 100%;
   background: #fff;
+  text-align: center;
   z-index: 1000;
+
+  @media (max-width: 1024px) {
+    gap: 20px;
+    flex-direction: column;
+    height: auto;
+  }
+`;
+
+const Sbox = styled.div`
+  width: 40%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-direction: column;
+
+  @media (max-width: 1024px) {
+    width: 90%;
+    height: 150px;
+  }
 `;
 
 const Spinner = styled.div`
@@ -328,23 +264,25 @@ const PredictionPriceDiv = styled.div`
   font-size: 20px; /* 폰트 크기 */
   text-align: center;
 `;
+const Div = styled.div`
+  width: 20%;
+`;
 
 const StockSuggestion = () => {
   const [isModal1Open, setModal1Open] = useState(false);
   const [predictedPrices, setPredictedPrices] = useState([]);
   const [latestPrice, setLatestPrice] = useState([]);
   const [stockName, setStockName] = useState("");
-  const [isModal2Open, setModal2Open] = useState(false);
   const [inputStock, setInputStock] = useState("");
+  const [inputRefund, setInputRefund] = useState(0);
   const [searchStocks, setSearchStocks] = useState([]);
-  const [error, setError] = useState(null);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false); // 로딩 상태 추가
 
   const getStocksName = async () => {
     try {
       const res = await axios.get(
-        `http://192.168.10.13:5000/api/stock?query=${inputStock}`,
+        `http://localhost:5000/api/stock?query=${inputStock}`,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -356,30 +294,29 @@ const StockSuggestion = () => {
       console.error("Error occurred:", error.message);
     }
   };
-  useEffect(() => {
-    const getTop5 = async () => {
-      try {
-        const res = await axios.get(
-          `http://192.168.10.13:5000/api/top5?price=16000`,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        setResults(res.data);
-      } catch (error) {
-        console.error("Error occurred:", error.message);
-      }
-    };
-    getTop5();
-  }, []);
+
+  const getTop5 = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/top5?price=${inputRefund}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(res.data);
+      setResults(res.data);
+    } catch (error) {
+      console.error("Error occurred:", error.message);
+    }
+  };
 
   const getPredict = async (ticker) => {
     setLoading(true); // 로딩 시작
     try {
       const res = await axios.get(
-        `http://192.168.10.13:5000/api/predict?stock=${ticker}`,
+        `http://localhost:5000/api/predict?stock=${ticker}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -402,9 +339,9 @@ const StockSuggestion = () => {
     }
   };
 
-  const onKeyDownEnter = (e) => {
+  const onKeyDownEnter = (e, func) => {
     if (e.key === "Enter") {
-      getStocksName();
+      func();
     }
   };
 
@@ -481,13 +418,65 @@ const StockSuggestion = () => {
 
   const chartOptions1 = {
     responsive: true,
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            size: 20, // X축 글씨 크기
+          },
+        },
+        title: {
+          display: true,
+          text: "종목명",
+          font: {
+            size: 16, // X축 제목 글씨 크기
+          },
+        },
+      },
+      y: {
+        ticks: {
+          font: {
+            size: 20, // Y축 글씨 크기
+          },
+        },
+      },
+    },
     plugins: {
       legend: {
-        position: "top",
+        labels: {
+          font: {
+            size: 20, // 범례 글씨 크기
+          },
+        },
       },
-      title: {
-        display: true,
-        text: "Top 5 주식 등락률",
+      tooltip: {
+        callbacks: {
+          title: () => "",
+          label: (tooltipItem) => {
+            const { dataIndex } = tooltipItem;
+            const stock = results[dataIndex]; // 현재 인덱스에 해당하는 주식 정보를 가져옵니다.
+
+            if (stock) {
+              const latestPrice = stock.latest_price.toFixed(2);
+              const predictedPrice = stock.predicted_price.toFixed(2);
+              const changeRate = stock.change_rate.toFixed(2);
+
+              return [
+                `현재 가격: ${latestPrice}`,
+                `예측 가격: ${predictedPrice}`,
+                `상승률: ${changeRate}%`,
+              ];
+            }
+
+            return [];
+          },
+        },
+        titleFont: {
+          size: 16, // 툴팁 제목 글씨 크기
+        },
+        bodyFont: {
+          size: 20, // 툴팁 본문 글씨 크기
+        },
       },
     },
   };
@@ -497,7 +486,38 @@ const StockSuggestion = () => {
       <Container>
         <PredictionContainer>
           <PredictionTextBox>
-            <h2>회원 예상 환급액: 16,000 원</h2>
+            <h2>
+              회원 예상 환급액
+              <Div>
+                <SearchInputContainer>
+                  <SearchInput
+                    placeholder={
+                      inputRefund === 0 ? "환급금을 입력하세요..." : inputRefund
+                    }
+                    onChange={(e) => setInputRefund(e.target.value)}
+                    onKeyDown={(e) => onKeyDownEnter(e, getTop5)}
+                  />
+                  <span>원</span>
+                  <SearchButton onClick={getTop5}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      width="24"
+                      height="24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M10 18l6-6m0 0l-6-6m6 6H4"
+                      />
+                    </svg>
+                  </SearchButton>
+                </SearchInputContainer>
+              </Div>
+            </h2>
             <Bar data={chartData1} options={chartOptions1} />
           </PredictionTextBox>
         </PredictionContainer>
@@ -506,7 +526,7 @@ const StockSuggestion = () => {
             <SearchInput
               placeholder="주식명을 입력하세요..."
               onChange={(e) => setInputStock(e.target.value)}
-              onKeyDown={onKeyDownEnter}
+              onKeyDown={(e) => onKeyDownEnter(e, getStocksName)}
             />
             <SearchButton onClick={getStocksName}>
               <svg
@@ -546,7 +566,10 @@ const StockSuggestion = () => {
               <h2>{stockName}의 3일 예측 주가</h2>
               {loading ? (
                 <SpinnerContainer>
-                  <Spinner />
+                  <Sbox>
+                    <p>주식을 예측중 입니다..</p>
+                    <Spinner />
+                  </Sbox>
                 </SpinnerContainer>
               ) : (
                 <div>

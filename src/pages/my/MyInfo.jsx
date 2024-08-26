@@ -48,6 +48,77 @@ const Cdiv = styled.div`
   flex-direction: column;
   gap: 10px;
 `;
+const Div = styled.div`
+  width: 100%;
+  height: 100px;
+
+  display: flex;
+  position: relative;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  p {
+    position: absolute;
+    left: 15px;
+    top: 0;
+  }
+
+  @media (max-width: 768px) {
+    height: 90px;
+  }
+`;
+const Box = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  position: relative;
+`;
+
+const NickB = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const Btn = styled.button`
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #fff;
+  border: 1px solid silver;
+  cursor: pointer;
+
+  &:hover {
+    background: #bbbbbb;
+    color: #fff;
+  }
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px 15px;
+  }
+`;
+
+const Error = styled.div`
+  display: flex;
+  align-items: center;
+  color: #ff3f3f;
+  font-size: 18px;
+  min-height: 26px;
+  visibility: ${({ children }) => (children === "" ? `hidden` : `visible`)};
+  position: absolute;
+  bottom: -60%;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+    bottom: -55%;
+  }
+`;
 const MyInfo = ({
   user,
   setModalOpen,
@@ -57,6 +128,7 @@ const MyInfo = ({
   message,
   setMessage,
   setRefresh,
+  setYes,
 }) => {
   const inputFile = useRef(null);
   const [file, setFile] = useState(null);
@@ -76,78 +148,6 @@ const MyInfo = ({
     }
   };
 
-  const Div = styled.div`
-    width: 100%;
-    height: 100px;
-
-    display: flex;
-    position: relative;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-
-    p {
-      position: absolute;
-      left: 15px;
-      top: 0;
-    }
-
-    @media (max-width: 768px) {
-      height: 90px;
-    }
-  `;
-  const Box = styled.div`
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    position: relative;
-  `;
-
-  const NickB = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `;
-  const Btn = styled.button`
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    background: #fff;
-    border: 1px solid silver;
-    cursor: pointer;
-
-    &:hover {
-      background: #bbbbbb;
-      color: #fff;
-    }
-    @media (max-width: 1024px) {
-      font-size: 16px;
-    }
-
-    @media (max-width: 768px) {
-      padding: 10px 15px;
-    }
-  `;
-
-  const Error = styled.div`
-    display: flex;
-    align-items: center;
-    color: #ff3f3f;
-    font-size: 18px;
-    min-height: 26px;
-    visibility: ${({ children }) => (children === "" ? `hidden` : `visible`)};
-    position: absolute;
-    bottom: -60%;
-
-    @media (max-width: 768px) {
-      font-size: 16px;
-      bottom: -55%;
-    }
-  `;
-
   const onClickEdit = (type) => {
     setModalOpen(true);
     setType(type);
@@ -157,12 +157,14 @@ const MyInfo = ({
         break;
       case 2:
         setHeader("비밀번호 수정");
+        setYes("확인");
         break;
       case 3:
         setHeader("닉네임 수정");
         break;
       case 4:
         setHeader("이메일 수정");
+        setYes("수정");
         break;
       default:
         setHeader("오류");

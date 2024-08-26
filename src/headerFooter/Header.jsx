@@ -144,7 +144,7 @@ const MobileDivBox = styled.div`
 const Div = styled.div`
   width: 100%;
   height: 100px;
-  color: #000;
+  color: ${({ color }) => (color ? "gray" : "black")};
   background: #ebebeb;
   display: flex;
   border-radius: 20px;
@@ -264,6 +264,7 @@ const Header = () => {
                 <>
                   <Div
                     onClick={() => navigate("/my")}
+                    color={location.pathname.includes(`stock`)}
                     style={{
                       width: `120px`,
                       height: `150px`,
@@ -279,6 +280,7 @@ const Header = () => {
                   </Div>
                   <Div
                     onClick={openModal}
+                    color={location.pathname.includes(`stock`)}
                     style={{
                       width: `120px`,
                       height: `150px`,
@@ -294,6 +296,7 @@ const Header = () => {
                   </Div>
                   <Div
                     onClick={onClickLogout}
+                    color={location.pathname.includes(`stock`)}
                     style={{
                       width: `120px`,
                       height: `150px`,
@@ -311,6 +314,7 @@ const Header = () => {
               ) : (
                 <Div
                   onClick={() => navigate("/login")}
+                  color={location.pathname.includes(`stock`)}
                   style={{
                     width: `120px`,
                     height: `150px`,

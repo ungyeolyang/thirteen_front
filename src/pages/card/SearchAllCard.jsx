@@ -254,16 +254,17 @@ const SearchCard = ({ setSelectedCard, onImageLoaded }) => {
 
   useEffect(() => {
     const getCard = async () => {
+      // console.log("input", inputSearch);
+      const addr = inputSearch
+        ? `http://localhost:5000/api/card?query=${inputSearch}`
+        : `http://localhost:5000/api/card?query=`;
       try {
-        const res = await axios.get(
-          `http://192.168.10.13:5000/api/card?query=${inputSearch}`,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        // console.log("Response received:", res.data);
+        const res = await axios.get(addr, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("Response received:", res.data);
         setSearchCards(res.data);
         if (onImageLoaded) {
           // 이미지 로드 시 콜백 호출
