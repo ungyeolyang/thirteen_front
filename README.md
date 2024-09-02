@@ -1,2 +1,4 @@
-![1025로고](https://github.com/ungyeolyang/thirteen_front/blob/master/src/image/LogoGreen-removebg-preview.png) # 1025
+# 1025
+---
+1025는 사용자들의 더 현명한 소비 생활을 돕는 카드 및 주식 추천 웹페이지 입니다. 
 
